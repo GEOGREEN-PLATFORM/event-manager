@@ -13,7 +13,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "event_history")
 @Data
-public class EventHistory {
+public class EventHistoryEntity {
 
     @Id
     @GeneratedValue(generator = "uuid-generator")
