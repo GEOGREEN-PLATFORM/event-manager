@@ -91,6 +91,12 @@ public class EventManagerServiceImpl implements EventManagerService {
     @Override
     @Transactional
     public void deleteEvent(UUID eventId) {
+        List<EventHistoryEntity> histories = getEventHistory(eventId);
+
+        for (EventHistoryEntity history : histories) {
+            deleteHistory(eventId, history.getId());
+        }
+
         eventRepository.delete(getEventById(eventId));
         logger.info("Мероприятие с айди {} удалено", eventId);
     }
