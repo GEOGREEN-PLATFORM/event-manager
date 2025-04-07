@@ -21,7 +21,6 @@ public class UpdateEventDTO {
     @Schema(description = "Название мероприятия", example = "Название")
     private String name;
 
-    @PastOrPresent
     @Schema(description = "Дата завершения мероприятия", example = "2025-02-19")
     private LocalDate endDate;
 

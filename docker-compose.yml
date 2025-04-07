@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   event-manager:
-    image: client:0.0.1
+    image: client:0.0.3
     build:
       context: .
       dockerfile: Dockerfile
@@ -19,7 +19,7 @@ services:
     image: postgres:14.7-alpine
     environment:
       POSTGRES_USER: event-manager-admin
-      POSTGRES_PASSWORD: qwe123
+      POSTGRES_PASSWORD: password
     ports:
       - "15434:5432"
     volumes:

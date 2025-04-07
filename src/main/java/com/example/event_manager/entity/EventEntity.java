@@ -31,7 +31,6 @@ public class EventEntity {
     private LocalDate startDate;
 
     @Column(name = "end_date")
-    @PastOrPresent
     private LocalDate endDate;
 
     @NotNull

@@ -73,7 +73,7 @@ public class EventManagerServiceImpl implements EventManagerService {
         EventEntity eventEntity = getEventById(eventId);
 
         eventEntity.setLastUpdateDate(LocalDate.now());
-        eventEntity.setStatus(updateEventDTO.getStatus());
+        eventEntity.setStatus(updateEventDTO.getStatus() != null ? updateEventDTO.getStatus() : eventEntity.getStatus());
         eventEntity.setDescription(updateEventDTO.getDescription() != null ? updateEventDTO.getDescription() : eventEntity.getDescription());
         eventEntity.setName(updateEventDTO.getName() != null ? updateEventDTO.getName() : eventEntity.getName());
 
