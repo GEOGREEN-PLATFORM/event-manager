@@ -15,6 +15,7 @@ public interface EventManagerService {
     EventHistoryEntity createNewHistory(CreateHistoryDTO createHistoryDTO, UUID eventId);
 
     EventEntity getEventById(UUID eventId);
+    List<EventEntity> getAllEvents();
 
     List<EventHistoryEntity> getEventHistory(UUID eventId);
 

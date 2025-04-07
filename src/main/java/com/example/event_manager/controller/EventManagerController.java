@@ -52,6 +52,23 @@ public class EventManagerController {
         return eventManagerService.createNewHistory(createHistoryDTO, eventId);
     }
 
+    @GetMapping("/{eventId}")
+    @Operation(
+            summary = "Поулчение мероприятия по айди"
+    )
+    public EventEntity getEventById(@PathVariable @Parameter(description = "Айди мероптиятия", required = true) UUID eventId) {
+        logger.info("Пришел запрос на получение мероприятия по айди - {}", eventId);
+        return eventManagerService.getEventById(eventId);
+    }
+
+    @GetMapping("/getAll")
+    @Operation(
+            summary = "Получение всех мероприятий"
+    )
+    public List<EventEntity> getAllEvents() {
+        return eventManagerService.getAllEvents();
+    }
+
     @GetMapping("/{eventId}/history")
     @Operation(
             summary = "Поулчение истории мероприятия",

@@ -55,6 +55,11 @@ public class EventManagerServiceImpl implements EventManagerService {
     }
 
     @Override
+    public List<EventEntity> getAllEvents() {
+        return eventRepository.findAll();
+    }
+
+    @Override
     public List<EventHistoryEntity> getEventHistory(UUID eventId) {
         getEventById(eventId);
         logger.info("Мероприятие с айди {} найдено в базе данных", eventId);
@@ -68,11 +73,9 @@ public class EventManagerServiceImpl implements EventManagerService {
 
         eventEntity.setLastUpdateDate(LocalDate.now());
         eventEntity.setStatus(updateEventDTO.getStatus());
+        eventEntity.setDescription(updateEventDTO.getDescription() != null ? updateEventDTO.getDescription() : eventEntity.getDescription());
 
-        if (updateEventDTO.getEndDate() == null) {
-            eventEntity.setEndDate(LocalDate.now());
-        }
-        else {
+        if (updateEventDTO.getEndDate() != null) {
             eventEntity.setEndDate(updateEventDTO.getEndDate());
         }
 
@@ -119,6 +122,10 @@ public class EventManagerServiceImpl implements EventManagerService {
         }
         else {
             eventEntity.setStartDate(createEventDTO.getStartDate());
+        }
+
+        if (createEventDTO.getEndDate() != null) {
+            eventEntity.setEndDate(createEventDTO.getEndDate());
         }
 
         eventEntity.setLastUpdateDate(LocalDate.now());

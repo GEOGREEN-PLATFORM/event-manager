@@ -27,6 +27,11 @@ public class CreateEventDTO {
     @Schema(description = "Описание мероприятия", example = "тут много борщевика")
     private String description;
 
+    @NotNull
     @Schema(description = "Дата начала мероприятия", example = "2025-02-19")
     private LocalDate startDate;
+
+
+    @Schema(description = "Планируемая дата завершения мероприятия", example = "2026-02-19")
+    private LocalDate endDate;
 }
