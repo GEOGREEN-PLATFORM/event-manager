@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import jdk.jshell.Snippet;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -38,10 +39,9 @@ public class EventEntity {
     @PastOrPresent
     private LocalDate lastUpdateDate;
 
-    @NotNull
-    @Column(name = "status")
-    @Pattern(regexp = "ПЛАНИРУЕТСЯ|В РАБОТЕ|ПРИОСТАНОВЛЕНО|ЗАВЕРШЕНО", message = "Status must be one of: ПЛАНИРУЕТСЯ, В РАБОТЕ, ПРИОСТАНОВЛЕНО, ЗАВЕРШЕНО")
-    private String status;
+    @ManyToOne
+    @JoinColumn(name = "status_code", referencedColumnName = "code")
+    private StatusEntity statusCode;
 
     @NotNull
     @Column(name = "event_type")

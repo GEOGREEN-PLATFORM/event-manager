@@ -2,6 +2,7 @@ package com.example.event_manager.exception;
 
 import com.example.event_manager.exception.custom.EventNotFoundException;
 import com.example.event_manager.exception.custom.HistoryNotFoundException;
+import com.example.event_manager.exception.custom.StatusNotFoundException;
 import com.example.event_manager.model.ResponseDTO;
 import org.springframework.http.ResponseEntity;
 import org.slf4j.Logger;
@@ -26,6 +27,15 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({ HistoryNotFoundException.class })
     public ResponseEntity<ResponseDTO> catchHistoryNotFoundException(HistoryNotFoundException e) {
+        logger.error("Произошла ошибка: {}", e.getMessage(), e);
+        return new ResponseEntity<>(new ResponseDTO(
+                HttpStatus.NOT_FOUND,
+                e.getMessage()), HttpStatus.NOT_FOUND
+        );
+    }
+
+    @ExceptionHandler({ StatusNotFoundException.class })
+    public ResponseEntity<ResponseDTO> catchStatusNotFoundException(StatusNotFoundException e) {
         logger.error("Произошла ошибка: {}", e.getMessage(), e);
         return new ResponseEntity<>(new ResponseDTO(
                 HttpStatus.NOT_FOUND,

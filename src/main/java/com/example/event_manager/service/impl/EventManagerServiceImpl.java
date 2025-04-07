@@ -3,13 +3,16 @@ package com.example.event_manager.service.impl;
 import com.example.event_manager.controller.EventManagerController;
 import com.example.event_manager.entity.EventEntity;
 import com.example.event_manager.entity.EventHistoryEntity;
+import com.example.event_manager.entity.StatusEntity;
 import com.example.event_manager.exception.custom.EventNotFoundException;
 import com.example.event_manager.exception.custom.HistoryNotFoundException;
+import com.example.event_manager.exception.custom.StatusNotFoundException;
 import com.example.event_manager.model.CreateEventDTO;
 import com.example.event_manager.model.CreateHistoryDTO;
 import com.example.event_manager.model.UpdateEventDTO;
 import com.example.event_manager.repository.EventHistoryRepository;
 import com.example.event_manager.repository.EventRepository;
+import com.example.event_manager.repository.StatusRepository;
 import com.example.event_manager.service.EventManagerService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +35,10 @@ public class EventManagerServiceImpl implements EventManagerService {
 
     @Autowired
     private EventHistoryRepository eventHistoryRepository;
+
+    @Autowired
+    private StatusRepository statusRepository;
+
     private static final Logger logger = LoggerFactory.getLogger(EventManagerController.class);
 
     @Override
@@ -73,12 +80,21 @@ public class EventManagerServiceImpl implements EventManagerService {
         EventEntity eventEntity = getEventById(eventId);
 
         eventEntity.setLastUpdateDate(LocalDate.now());
-        eventEntity.setStatus(updateEventDTO.getStatus() != null ? updateEventDTO.getStatus() : eventEntity.getStatus());
         eventEntity.setDescription(updateEventDTO.getDescription() != null ? updateEventDTO.getDescription() : eventEntity.getDescription());
         eventEntity.setName(updateEventDTO.getName() != null ? updateEventDTO.getName() : eventEntity.getName());
 
         if (updateEventDTO.getEndDate() != null) {
             eventEntity.setEndDate(updateEventDTO.getEndDate());
+        }
+
+        if (updateEventDTO.getStatusCode() != null) {
+            StatusEntity statusEntity = statusRepository.findByCode(updateEventDTO.getStatusCode());
+            if (statusEntity != null) {
+                eventEntity.setStatusCode(statusEntity);
+            }
+            else {
+                throw new StatusNotFoundException(updateEventDTO.getStatusCode());
+            }
         }
 
         eventEntity.setOperatorId(updateEventDTO.getOperatorId() != null ? updateEventDTO.getOperatorId() : eventEntity.getOperatorId());
@@ -135,7 +151,7 @@ public class EventManagerServiceImpl implements EventManagerService {
         }
 
         eventEntity.setLastUpdateDate(LocalDate.now());
-        eventEntity.setStatus("ПЛАНИРУЕТСЯ");
+        eventEntity.setStatusCode(statusRepository.findDefaultStatus());
         eventEntity.setEventType(createEventDTO.getEventType());
         eventEntity.setName(createEventDTO.getName());
         eventEntity.setDescription(createEventDTO.getDescription());

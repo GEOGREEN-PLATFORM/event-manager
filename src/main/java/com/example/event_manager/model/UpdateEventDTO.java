@@ -14,9 +14,8 @@ import java.util.UUID;
 @Schema(description = "Сущность для обновления мероприятия")
 public class UpdateEventDTO {
 
-    @Pattern(regexp = "ПЛАНИРУЕТСЯ|В РАБОТЕ|ПРИОСТАНОВЛЕНО|ЗАВЕРШЕНО", message = "Status must be one of: ПЛАНИРУЕТСЯ, В РАБОТЕ, ПРИОСТАНОВЛЕНО, ЗАВЕРШЕНО")
-    @Schema(description = "Статус мероприятия", allowableValues = {"ПЛАНИРУЕТСЯ", "В РАБОТЕ", "ПРИОСТАНОВЛЕНО", "ЗАВЕРШЕНО"})
-    private String status;
+    @Schema(description = "Статус мероприятия", example = "СОЗДАНО")
+    private String statusCode;
 
     @Schema(description = "Название мероприятия", example = "Название")
     private String name;
