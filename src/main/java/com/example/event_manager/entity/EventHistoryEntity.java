@@ -4,9 +4,11 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,23 +24,35 @@ public class EventHistoryEntity {
     private UUID id;
 
     @NotNull
-    @Column
+    @Column(name = "event_id")
     private UUID eventId;
 
     @NotNull
-    @Column
+    @Column(name = "record_date")
     @PastOrPresent
     private LocalDate recordDate;
 
     @NotNull
-    @Column
+    @Column(name = "record_type")
     @Pattern(regexp = "ПРОВЕДЕННАЯ РАБОТА|СНЯТИЕ СОСТОЯНИЯ", message = "Record type must be one of: ПРОВЕДЕННАЯ РАБОТА, СНЯТИЕ СОСТОЯНИЯ")
     private String recordType;
 
     @NotNull
-    @Column
+    @Column(name = "description")
     private String description;
 
-    @Column
+    @Column(name = "photos")
     private List<UUID> photos;
+
+    @Column(name = "operator_name")
+    @Size(max = 50)
+    private String operatorName;
+
+    @Column(name = "operator_id")
+    private UUID operatorId;
+
+    @Column(name = "create_date", nullable = false, updatable = false)
+    private LocalDateTime createDate;
+
+
 }

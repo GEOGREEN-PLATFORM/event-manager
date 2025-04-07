@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -74,10 +75,15 @@ public class EventManagerServiceImpl implements EventManagerService {
         eventEntity.setLastUpdateDate(LocalDate.now());
         eventEntity.setStatus(updateEventDTO.getStatus());
         eventEntity.setDescription(updateEventDTO.getDescription() != null ? updateEventDTO.getDescription() : eventEntity.getDescription());
+        eventEntity.setName(updateEventDTO.getName() != null ? updateEventDTO.getName() : eventEntity.getName());
 
         if (updateEventDTO.getEndDate() != null) {
             eventEntity.setEndDate(updateEventDTO.getEndDate());
         }
+
+        eventEntity.setOperatorId(updateEventDTO.getOperatorId() != null ? updateEventDTO.getOperatorId() : eventEntity.getOperatorId());
+        eventEntity.setOperatorName(updateEventDTO.getOperatorId() != null ? "Иванов И.И." : eventEntity.getOperatorName());
+        // TODO запрашивать имя у Даши
 
         logger.info("Мероприятие с айди {} обновлено в базе данных", eventId);
         return eventRepository.save(eventEntity);
@@ -115,7 +121,7 @@ public class EventManagerServiceImpl implements EventManagerService {
         // TODO Сделать проверку на корректное dto
         EventEntity eventEntity = new EventEntity();
 
-        eventEntity.setSourceId(createEventDTO.getSourceId());
+        eventEntity.setGeoPointId(createEventDTO.getGeoPointId());
 
         if (createEventDTO.getStartDate() == null) {
             eventEntity.setStartDate(LocalDate.now());
@@ -131,7 +137,16 @@ public class EventManagerServiceImpl implements EventManagerService {
         eventEntity.setLastUpdateDate(LocalDate.now());
         eventEntity.setStatus("ПЛАНИРУЕТСЯ");
         eventEntity.setEventType(createEventDTO.getEventType());
+        eventEntity.setName(createEventDTO.getName());
         eventEntity.setDescription(createEventDTO.getDescription());
+
+        eventEntity.setAuthorId(createEventDTO.getAuthorId());
+        eventEntity.setAuthorName("Иванов И.И.");
+        // TODO запрашивать имя у Даши
+
+        eventEntity.setOperatorId(createEventDTO.getOperatorId());
+        eventEntity.setOperatorName(createEventDTO.getOperatorId() != null ? "Иванов И.И." : null);
+        // TODO запрашивать имя у Даши
 
         return eventEntity;
     }
@@ -152,6 +167,12 @@ public class EventManagerServiceImpl implements EventManagerService {
         eventHistoryEntity.setRecordType(createHistoryDTO.getRecordType());
         eventHistoryEntity.setDescription(createHistoryDTO.getDescription() != null ? createHistoryDTO.getDescription() : "");
         eventHistoryEntity.setPhotos(createHistoryDTO.getPhotos() != null ? createHistoryDTO.getPhotos() : List.of());
+
+        eventHistoryEntity.setOperatorId(createHistoryDTO.getOperatorId());
+        eventHistoryEntity.setOperatorName("Иванов И.И.");
+        // TODO запрашивать имя у Даши
+
+        eventHistoryEntity.setCreateDate(LocalDateTime.now());
 
         return eventHistoryEntity;
     }

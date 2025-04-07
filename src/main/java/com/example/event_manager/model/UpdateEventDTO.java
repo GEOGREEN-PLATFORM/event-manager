@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -17,11 +18,17 @@ public class UpdateEventDTO {
     @Schema(description = "Статус мероприятия", allowableValues = {"ПЛАНИРУЕТСЯ", "В РАБОТЕ", "ПРИОСТАНОВЛЕНО", "ЗАВЕРШЕНО"})
     private String status;
 
+    @Schema(description = "Название мероприятия", example = "Название")
+    private String name;
+
     @PastOrPresent
     @Schema(description = "Дата завершения мероприятия", example = "2025-02-19")
     private LocalDate endDate;
 
     @Schema(description = "Описание мероприятия", example = "тут много борщевика")
     private String description;
+
+    @Schema(description = "Айди оператора мероприятия", example = "12f0887f-6b1d-4ee0-aba9-9e006bc4745e")
+    private UUID operatorId;
 
 }

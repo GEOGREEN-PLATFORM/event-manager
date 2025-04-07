@@ -37,7 +37,7 @@ public class EventManagerController {
             description = "Записывает в базу данных новое мероприятие"
     )
     public EventEntity saveNewEvent(@RequestBody @Parameter(description = "Сущность нового мероптиятия", required = true) CreateEventDTO createEventDTO) {
-        logger.info("Пришел запрос на создание мероприятие для очага - {}", createEventDTO.getSourceId());
+        logger.info("Пришел запрос на создание мероприятие для очага - {}", createEventDTO.getGeoPointId());
         return eventManagerService.createNewEvent(createEventDTO);
     }
 

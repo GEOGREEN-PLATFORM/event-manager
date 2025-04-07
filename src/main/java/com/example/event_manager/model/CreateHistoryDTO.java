@@ -1,7 +1,6 @@
 package com.example.event_manager.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Pattern;
@@ -18,21 +17,21 @@ import java.util.UUID;
 public class CreateHistoryDTO {
 
     @NotNull
-    @Column
     @Pattern(regexp = "ПРОВЕДЕННАЯ РАБОТА|СНЯТИЕ СОСТОЯНИЯ", message = "Record type must be one of: ПРОВЕДЕННАЯ РАБОТА, СНЯТИЕ СОСТОЯНИЯ")
     @Schema(description = "Тип истории по мероприятию", allowableValues = {"ПРОВЕДЕННАЯ РАБОТА", "СНЯТИЕ СОСТОЯНИЯ"})
     private String recordType;
 
-    @Column
     @PastOrPresent
-    @Schema(description = "Дата работ", example = "2025-02-19")
+    @Schema(description = "Дата работ (по умолчанию текущая дата)", example = "2025-02-19")
     private LocalDate recordDate;
 
-    @Column
     @Schema(description = "Описание работ", example = "тут много борщевика")
     private String description;
 
-    @Column
     @Schema(description = "Лист айди фотографий борщевика", example = "[7632b748-02bf-444b-bb95-1a4e6e1cffc5]")
     private List<UUID> photos;
+
+    @NotNull
+    @Schema(description = "Айди оператора мероприятия", example = "12f0887f-6b1d-4ee0-aba9-9e006bc4745e")
+    private UUID operatorId;
 }
