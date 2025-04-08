@@ -32,10 +32,10 @@ public class CreateEventDTO {
     private String description;
 
     @NotNull
-    @Schema(description = "Дата начала мероприятия", example = "2025-02-19")
+    @Schema(description = "Дата начала мероприятия", example = "2027-04-10T12:00:00+03:00")
     private Instant startDate;
 
-    @Schema(description = "Планируемая дата завершения мероприятия", example = "2026-02-19")
+    @Schema(description = "Планируемая дата завершения мероприятия", example = "2027-04-10T12:00:00+03:00")
     private Instant endDate;
 
     @NotNull

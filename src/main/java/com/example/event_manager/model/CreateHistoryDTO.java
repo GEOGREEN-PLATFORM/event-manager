@@ -22,7 +22,7 @@ public class CreateHistoryDTO {
     private String recordType;
 
     @PastOrPresent
-    @Schema(description = "Дата работ (по умолчанию текущая дата)", example = "2025-02-19")
+    @Schema(description = "Дата работ (по умолчанию текущая дата)", example = "2027-04-10T12:00:00+03:00")
     private Instant recordDate;
 
     @Schema(description = "Описание работ", example = "тут много борщевика")

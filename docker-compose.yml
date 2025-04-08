@@ -1,19 +1,19 @@
 version: '3.8'
 services:
-  event-manager:
-    image: client:0.0.3
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "8282:8282"
-    depends_on:
-      - event-manager-db
-    environment:
-      - SERVER_PORT= 8282
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://event-manager-db/event_manager
-    networks:
-      - shared_network
+#  event-manager:
+#    image: client:0.0.3
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8282:8282"
+#    depends_on:
+#      - event-manager-db
+#    environment:
+#      - SERVER_PORT= 8282
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://event-manager-db/event_manager
+#    networks:
+#      - shared_network
 
   event-manager-db:
     image: postgres:14.7-alpine

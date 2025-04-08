@@ -38,9 +38,8 @@ public class EventEntity {
     @PastOrPresent
     private Instant lastUpdateDate;
 
-    @ManyToOne
     @JoinColumn(name = "status_code", referencedColumnName = "code")
-    private StatusEntity statusCode;
+    private String statusCode;
 
     @NotNull
     @Column(name = "event_type")

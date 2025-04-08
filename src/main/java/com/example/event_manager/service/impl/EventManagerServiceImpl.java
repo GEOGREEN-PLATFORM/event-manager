@@ -89,7 +89,7 @@ public class EventManagerServiceImpl implements EventManagerService {
         if (updateEventDTO.getStatusCode() != null) {
             StatusEntity statusEntity = statusRepository.findByCode(updateEventDTO.getStatusCode());
             if (statusEntity != null) {
-                eventEntity.setStatusCode(statusEntity);
+                eventEntity.setStatusCode(statusEntity.getCode());
             }
             else {
                 throw new StatusNotFoundException(updateEventDTO.getStatusCode());
@@ -150,7 +150,7 @@ public class EventManagerServiceImpl implements EventManagerService {
         }
 
         eventEntity.setLastUpdateDate(Instant.now());
-        eventEntity.setStatusCode(statusRepository.findDefaultStatus());
+        eventEntity.setStatusCode(statusRepository.findDefaultStatus().getCode());
         eventEntity.setEventType(createEventDTO.getEventType());
         eventEntity.setName(createEventDTO.getName());
         eventEntity.setDescription(createEventDTO.getDescription());

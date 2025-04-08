@@ -18,7 +18,7 @@ public class UpdateEventDTO {
     @Schema(description = "Название мероприятия", example = "Название")
     private String name;
 
-    @Schema(description = "Дата завершения мероприятия", example = "2025-02-19")
+    @Schema(description = "Дата завершения мероприятия", example = "2027-04-10T12:00:00+03:00")
     private Instant endDate;
 
     @Schema(description = "Описание мероприятия", example = "тут много борщевика")
