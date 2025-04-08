@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.UUID;
 
 @Entity
@@ -28,15 +28,15 @@ public class EventEntity {
     @NotNull
     @Column(name = "start_date")
     @PastOrPresent
-    private LocalDate startDate;
+    private Instant startDate;
 
     @Column(name = "end_date")
-    private LocalDate endDate;
+    private Instant endDate;
 
     @NotNull
     @Column(name = "last_update_date")
     @PastOrPresent
-    private LocalDate lastUpdateDate;
+    private Instant lastUpdateDate;
 
     @ManyToOne
     @JoinColumn(name = "status_code", referencedColumnName = "code")

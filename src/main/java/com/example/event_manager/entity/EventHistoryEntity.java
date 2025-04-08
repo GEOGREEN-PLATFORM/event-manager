@@ -7,8 +7,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,7 +29,7 @@ public class EventHistoryEntity {
     @NotNull
     @Column(name = "record_date")
     @PastOrPresent
-    private LocalDate recordDate;
+    private Instant recordDate;
 
     @NotNull
     @Column(name = "record_type")
@@ -52,7 +51,7 @@ public class EventHistoryEntity {
     private UUID operatorId;
 
     @Column(name = "create_date", nullable = false, updatable = false)
-    private LocalDateTime createDate;
+    private Instant createDate;
 
 
 }

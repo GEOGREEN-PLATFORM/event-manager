@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.UUID;
 
 @Data
@@ -19,7 +19,7 @@ public class UpdateEventDTO {
     private String name;
 
     @Schema(description = "Дата завершения мероприятия", example = "2025-02-19")
-    private LocalDate endDate;
+    private Instant endDate;
 
     @Schema(description = "Описание мероприятия", example = "тут много борщевика")
     private String description;

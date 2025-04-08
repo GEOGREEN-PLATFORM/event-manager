@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.UUID;
 
 @Data
@@ -33,10 +33,10 @@ public class CreateEventDTO {
 
     @NotNull
     @Schema(description = "Дата начала мероприятия", example = "2025-02-19")
-    private LocalDate startDate;
+    private Instant startDate;
 
     @Schema(description = "Планируемая дата завершения мероприятия", example = "2026-02-19")
-    private LocalDate endDate;
+    private Instant endDate;
 
     @NotNull
     @Schema(description = "Айди автора мероприятия", example = "12f0887f-6b1d-4ee0-aba9-9e006bc4745e")

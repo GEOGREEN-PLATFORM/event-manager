@@ -21,8 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -79,7 +78,7 @@ public class EventManagerServiceImpl implements EventManagerService {
     public EventEntity updateEvent(UpdateEventDTO updateEventDTO, UUID eventId) {
         EventEntity eventEntity = getEventById(eventId);
 
-        eventEntity.setLastUpdateDate(LocalDate.now());
+        eventEntity.setLastUpdateDate(Instant.now());
         eventEntity.setDescription(updateEventDTO.getDescription() != null ? updateEventDTO.getDescription() : eventEntity.getDescription());
         eventEntity.setName(updateEventDTO.getName() != null ? updateEventDTO.getName() : eventEntity.getName());
 
@@ -140,7 +139,7 @@ public class EventManagerServiceImpl implements EventManagerService {
         eventEntity.setGeoPointId(createEventDTO.getGeoPointId());
 
         if (createEventDTO.getStartDate() == null) {
-            eventEntity.setStartDate(LocalDate.now());
+            eventEntity.setStartDate(Instant.now());
         }
         else {
             eventEntity.setStartDate(createEventDTO.getStartDate());
@@ -150,7 +149,7 @@ public class EventManagerServiceImpl implements EventManagerService {
             eventEntity.setEndDate(createEventDTO.getEndDate());
         }
 
-        eventEntity.setLastUpdateDate(LocalDate.now());
+        eventEntity.setLastUpdateDate(Instant.now());
         eventEntity.setStatusCode(statusRepository.findDefaultStatus());
         eventEntity.setEventType(createEventDTO.getEventType());
         eventEntity.setName(createEventDTO.getName());
@@ -174,7 +173,7 @@ public class EventManagerServiceImpl implements EventManagerService {
         eventHistoryEntity.setEventId(eventId);
 
         if (createHistoryDTO.getRecordDate() == null) {
-            eventHistoryEntity.setRecordDate(LocalDate.now());
+            eventHistoryEntity.setRecordDate(Instant.now());
         }
         else {
             eventHistoryEntity.setRecordDate(createHistoryDTO.getRecordDate());
@@ -188,7 +187,7 @@ public class EventManagerServiceImpl implements EventManagerService {
         eventHistoryEntity.setOperatorName("Иванов И.И.");
         // TODO запрашивать имя у Даши
 
-        eventHistoryEntity.setCreateDate(LocalDateTime.now());
+        eventHistoryEntity.setCreateDate(Instant.now());
 
         return eventHistoryEntity;
     }

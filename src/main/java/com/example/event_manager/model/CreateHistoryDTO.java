@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,7 +23,7 @@ public class CreateHistoryDTO {
 
     @PastOrPresent
     @Schema(description = "Дата работ (по умолчанию текущая дата)", example = "2025-02-19")
-    private LocalDate recordDate;
+    private Instant recordDate;
 
     @Schema(description = "Описание работ", example = "тут много борщевика")
     private String description;

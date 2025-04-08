@@ -9,5 +9,7 @@
     <include file="v.1.0.1/update-table-event-history.xml" relativeToChangelogFile="true" />
     <include file="v.1.1.0/create-table-status.xml" relativeToChangelogFile="true" />
     <include file="v.1.1.0/update-table-events.xml" relativeToChangelogFile="true" />
+    <include file="v.1.1.1/update-table-events.xml" relativeToChangelogFile="true" />
+    <include file="v.1.1.1/update-table-event-history.xml" relativeToChangelogFile="true" />
 
 </databaseChangeLog>
