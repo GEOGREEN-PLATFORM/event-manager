@@ -2,7 +2,7 @@ package com.example.event_manager.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -19,9 +19,14 @@ public class CreateEventDTO {
     private UUID geoPointId;
 
     @NotNull
-    @Pattern(regexp = "УСТРАНЕНИЕ БОРЩЕВИКА|УСТРЕНЕНИЕ ПОСЛЕДСТВИЙ ПОЖАРА|СВАЛКА", message = "Event type must be one of: УСТРАНЕНИЕ БОРЩЕВИКА, УСТРЕНЕНИЕ ПОСЛЕДСТВИЙ ПОЖАРА, СВАЛКА")
-    @Schema(description = "Тип мероприятия", allowableValues = {"УСТРАНЕНИЕ БОРЩЕВИКА", "УСТРЕНЕНИЕ ПОСЛЕДСТВИЙ ПОЖАРА", "СВАЛКА"})
+    @Size(max = 50)
+    @Schema(description = "Тип мероприятия", example = "Наблюдение")
     private String eventType;
+
+    @NotNull
+    @Size(max = 50)
+    @Schema(description = "Тип экологической проблемы", example = "Борщевик")
+    private String problemAreaType;
 
     @NotNull
     @Schema(description = "Название мероприятия", example = "Название")

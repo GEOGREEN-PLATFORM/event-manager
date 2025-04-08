@@ -11,5 +11,8 @@
     <include file="v.1.1.0/update-table-events.xml" relativeToChangelogFile="true" />
     <include file="v.1.1.1/update-table-events.xml" relativeToChangelogFile="true" />
     <include file="v.1.1.1/update-table-event-history.xml" relativeToChangelogFile="true" />
+    <include file="v.1.2.0/create-table-problem-type.xml" relativeToChangelogFile="true" />
+    <include file="v.1.2.0/create-table-event-type.xml" relativeToChangelogFile="true" />
+    <include file="v.1.2.0/update-table-events.xml" relativeToChangelogFile="true" />
 
 </databaseChangeLog>

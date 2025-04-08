@@ -3,7 +3,6 @@ package com.example.event_manager.model;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
-import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -17,8 +16,7 @@ import java.util.UUID;
 public class CreateHistoryDTO {
 
     @NotNull
-    @Pattern(regexp = "ПРОВЕДЕННАЯ РАБОТА|СНЯТИЕ СОСТОЯНИЯ", message = "Record type must be one of: ПРОВЕДЕННАЯ РАБОТА, СНЯТИЕ СОСТОЯНИЯ")
-    @Schema(description = "Тип истории по мероприятию", allowableValues = {"ПРОВЕДЕННАЯ РАБОТА", "СНЯТИЕ СОСТОЯНИЯ"})
+    @Schema(description = "Тип истории по мероприятию", example = "Наблюдение")
     private String recordType;
 
     @PastOrPresent

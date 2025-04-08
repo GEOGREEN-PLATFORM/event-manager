@@ -2,8 +2,6 @@ package com.example.event_manager.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
@@ -28,12 +26,11 @@ public class EventHistoryEntity {
 
     @NotNull
     @Column(name = "record_date")
-    @PastOrPresent
     private Instant recordDate;
 
     @NotNull
     @Column(name = "record_type")
-    @Pattern(regexp = "ПРОВЕДЕННАЯ РАБОТА|СНЯТИЕ СОСТОЯНИЯ", message = "Record type must be one of: ПРОВЕДЕННАЯ РАБОТА, СНЯТИЕ СОСТОЯНИЯ")
+    @JoinColumn(name = "event_type", referencedColumnName = "code")
     private String recordType;
 
     @NotNull

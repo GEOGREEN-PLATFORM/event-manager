@@ -1,7 +1,6 @@
 package com.example.event_manager.repository;
 
 import com.example.event_manager.entity.EventEntity;
-import com.example.event_manager.entity.StatusEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -16,6 +15,16 @@ public interface EventRepository extends JpaRepository<EventEntity, UUID> {
     @Transactional
     @Modifying
     @Query("UPDATE EventEntity u SET u.statusCode = :newStatus WHERE u.statusCode = :oldStatus")
-    int updateStatusForEvents(StatusEntity oldStatus, StatusEntity newStatus);
+    int updateStatusForEvents(String oldStatus, String newStatus);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE EventEntity u SET u.problemAreaType = :newProblem WHERE u.problemAreaType = :oldProblem")
+    int updateProblemForMarkers(String oldProblem, String newProblem);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE EventEntity u SET u.eventType = :newProblem WHERE u.eventType = :oldProblem")
+    int updateEventTypeForMarkers(String oldProblem, String newProblem);
 
 }

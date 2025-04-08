@@ -2,8 +2,6 @@ package com.example.event_manager.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
@@ -27,7 +25,6 @@ public class EventEntity {
 
     @NotNull
     @Column(name = "start_date")
-    @PastOrPresent
     private Instant startDate;
 
     @Column(name = "end_date")
@@ -35,7 +32,6 @@ public class EventEntity {
 
     @NotNull
     @Column(name = "last_update_date")
-    @PastOrPresent
     private Instant lastUpdateDate;
 
     @JoinColumn(name = "status_code", referencedColumnName = "code")
@@ -43,8 +39,13 @@ public class EventEntity {
 
     @NotNull
     @Column(name = "event_type")
-    @Pattern(regexp = "УСТРАНЕНИЕ БОРЩЕВИКА|УСТРЕНЕНИЕ ПОСЛЕДСТВИЙ ПОЖАРА|СВАЛКА", message = "Event type must be one of: УСТРАНЕНИЕ БОРЩЕВИКА, УСТРЕНЕНИЕ ПОСЛЕДСТВИЙ ПОЖАРА, СВАЛКА")
+    @JoinColumn(name = "event_type", referencedColumnName = "code")
     private String eventType;
+
+    @NotNull
+    @Column(name = "problem_area_type")
+    @JoinColumn(name = "problem_type", referencedColumnName = "code")
+    private String problemAreaType;
 
     @NotNull
     @Column(name = "description")

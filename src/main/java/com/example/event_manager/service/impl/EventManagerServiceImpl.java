@@ -1,18 +1,12 @@
 package com.example.event_manager.service.impl;
 
 import com.example.event_manager.controller.EventManagerController;
-import com.example.event_manager.entity.EventEntity;
-import com.example.event_manager.entity.EventHistoryEntity;
-import com.example.event_manager.entity.StatusEntity;
-import com.example.event_manager.exception.custom.EventNotFoundException;
-import com.example.event_manager.exception.custom.HistoryNotFoundException;
-import com.example.event_manager.exception.custom.StatusNotFoundException;
+import com.example.event_manager.entity.*;
+import com.example.event_manager.exception.custom.*;
 import com.example.event_manager.model.CreateEventDTO;
 import com.example.event_manager.model.CreateHistoryDTO;
 import com.example.event_manager.model.UpdateEventDTO;
-import com.example.event_manager.repository.EventHistoryRepository;
-import com.example.event_manager.repository.EventRepository;
-import com.example.event_manager.repository.StatusRepository;
+import com.example.event_manager.repository.*;
 import com.example.event_manager.service.EventManagerService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +31,12 @@ public class EventManagerServiceImpl implements EventManagerService {
 
     @Autowired
     private StatusRepository statusRepository;
+
+    @Autowired
+    private ProblemTypeRepository problemTypeRepository;
+
+    @Autowired
+    private EventTypeRepository eventTypeRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(EventManagerController.class);
 
@@ -163,6 +163,23 @@ public class EventManagerServiceImpl implements EventManagerService {
         eventEntity.setOperatorName(createEventDTO.getOperatorId() != null ? "Иванов И.И." : null);
         // TODO запрашивать имя у Даши
 
+        ProblemTypeEntity problemTypeEntity = problemTypeRepository.findByCode(createEventDTO.getProblemAreaType());
+        if (problemTypeEntity != null) {
+            eventEntity.setProblemAreaType(problemTypeEntity.getCode());
+        }
+        else {
+            throw new ProblemNotFoundException(createEventDTO.getProblemAreaType());
+        }
+
+
+        EventTypeEntity eventTypeEntity = eventTypeRepository.findByCode(createEventDTO.getEventType());
+        if (eventTypeEntity != null) {
+            eventEntity.setEventType(eventTypeEntity.getCode());
+        }
+        else {
+            throw new EventTypeNotFoundException(createEventDTO.getEventType());
+        }
+
         return eventEntity;
     }
 
@@ -188,6 +205,14 @@ public class EventManagerServiceImpl implements EventManagerService {
         // TODO запрашивать имя у Даши
 
         eventHistoryEntity.setCreateDate(Instant.now());
+
+        EventTypeEntity eventTypeEntity = eventTypeRepository.findByCode(createHistoryDTO.getRecordType());
+        if (eventTypeEntity != null) {
+            eventHistoryEntity.setRecordType(eventTypeEntity.getCode());
+        }
+        else {
+            throw new EventTypeNotFoundException(createHistoryDTO.getRecordType());
+        }
 
         return eventHistoryEntity;
     }
