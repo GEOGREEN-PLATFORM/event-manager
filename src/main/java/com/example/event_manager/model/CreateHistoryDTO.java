@@ -1,5 +1,6 @@
 package com.example.event_manager.model;
 
+import com.example.event_manager.model.image.ImageDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
@@ -26,8 +27,8 @@ public class CreateHistoryDTO {
     @Schema(description = "Описание работ", example = "тут много борщевика")
     private String description;
 
-    @Schema(description = "Лист айди фотографий борщевика", example = "[7632b748-02bf-444b-bb95-1a4e6e1cffc5]")
-    private List<UUID> photos;
+    @Schema(description = "Лист айди фотографий борщевика")
+    private List<ImageDTO> photos;
 
     @NotNull
     @Schema(description = "Айди оператора мероприятия", example = "12f0887f-6b1d-4ee0-aba9-9e006bc4745e")
