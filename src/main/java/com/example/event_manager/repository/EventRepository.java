@@ -1,6 +1,9 @@
 package com.example.event_manager.repository;
 
 import com.example.event_manager.entity.EventEntity;
+import jakarta.validation.constraints.NotNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -26,5 +29,9 @@ public interface EventRepository extends JpaRepository<EventEntity, UUID> {
     @Modifying
     @Query("UPDATE EventEntity u SET u.eventType = :newProblem WHERE u.eventType = :oldProblem")
     int updateEventTypeForMarkers(String oldProblem, String newProblem);
+
+    @Override
+    @NotNull
+    Page<EventEntity> findAll(@NotNull Pageable pageable);
 
 }

@@ -15,10 +15,10 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -65,8 +65,9 @@ public class EventManagerController {
     @Operation(
             summary = "Получение всех мероприятий"
     )
-    public List<EventEntity> getAllEvents() {
-        return eventManagerService.getAllEvents();
+    public Page<EventEntity> getAllEvents(@RequestParam(defaultValue = "0") int page,
+                                          @RequestParam(defaultValue = "10") int size) {
+        return eventManagerService.getAllEvents(page, size);
     }
 
     @GetMapping("/{eventId}/history")
@@ -75,9 +76,11 @@ public class EventManagerController {
             description = "Возвращает всю историю по мероприятию"
     )
     @ApiResponse(responseCode = "404", description = "Event with id ... not found!")
-    public List<EventHistoryEntity> getEventHistory(@PathVariable @Parameter(description = "Айди мероптиятия", required = true) UUID eventId) {
+    public Page<EventHistoryEntity> getEventHistory(@PathVariable @Parameter(description = "Айди мероптиятия", required = true) UUID eventId,
+                                                    @RequestParam(defaultValue = "0") int page,
+                                                    @RequestParam(defaultValue = "10") int size) {
         logger.info("Пришел запрос на получение истории мероприятия с айди - {}", eventId);
-        return eventManagerService.getEventHistory(eventId);
+        return eventManagerService.getEventHistory(eventId, page, size);
     }
 
     @PatchMapping("/{eventId}")

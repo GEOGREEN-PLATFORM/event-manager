@@ -5,6 +5,7 @@ import com.example.event_manager.entity.EventHistoryEntity;
 import com.example.event_manager.model.CreateEventDTO;
 import com.example.event_manager.model.CreateHistoryDTO;
 import com.example.event_manager.model.UpdateEventDTO;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.UUID;
@@ -15,7 +16,10 @@ public interface EventManagerService {
     EventHistoryEntity createNewHistory(CreateHistoryDTO createHistoryDTO, UUID eventId);
 
     EventEntity getEventById(UUID eventId);
-    List<EventEntity> getAllEvents();
+
+    Page<EventEntity> getAllEvents(int page, int size);
+
+    Page<EventHistoryEntity> getEventHistory(UUID eventId, int page, int size);
 
     List<EventHistoryEntity> getEventHistory(UUID eventId);
 

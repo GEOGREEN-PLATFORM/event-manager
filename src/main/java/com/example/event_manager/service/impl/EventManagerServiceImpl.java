@@ -13,6 +13,9 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -62,15 +65,22 @@ public class EventManagerServiceImpl implements EventManagerService {
     }
 
     @Override
-    public List<EventEntity> getAllEvents() {
-        return eventRepository.findAll();
+    public Page<EventEntity> getAllEvents(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return eventRepository.findAll(pageable);
     }
 
     @Override
-    public List<EventHistoryEntity> getEventHistory(UUID eventId) {
+    public Page<EventHistoryEntity> getEventHistory(UUID eventId, int page, int size) {
         getEventById(eventId);
         logger.info("Мероприятие с айди {} найдено в базе данных", eventId);
-        return eventHistoryRepository.findByEventId(eventId);
+        return eventHistoryRepository.findByEventId(eventId, PageRequest.of(page, size));
+    }
+
+    @Deprecated
+    @Override
+    public List<EventHistoryEntity> getEventHistory(UUID eventId) {
+        return getEventHistory(eventId, 0, Integer.MAX_VALUE).getContent();
     }
 
     @Override
