@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet logicalFilePath="remove-status-column-from-event"
+               id="remove-status-column-from-event" author="Egor">
+        <dropColumn tableName="event" columnName="status"/>
+    </changeSet>
+
+    <changeSet id="add-status-to-entity" author="Egor">
+        <addColumn tableName="event">
+            <column name="status_code" type="VARCHAR(50)"/>
+        </addColumn>
+
+        <addForeignKeyConstraint
+                baseTableName="event"
+                baseColumnNames="status_code"
+                referencedTableName="status"
+                referencedColumnNames="code"
+                constraintName="fk_entity_status_code"
+                onDelete="RESTRICT"
+                onUpdate="CASCADE"/>
+    </changeSet>
+
+</databaseChangeLog>

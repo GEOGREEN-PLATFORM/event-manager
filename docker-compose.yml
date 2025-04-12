@@ -1,0 +1,37 @@
+version: '3.8'
+services:
+#  event-manager:
+#    image: client:0.0.3
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8282:8282"
+#    depends_on:
+#      - event-manager-db
+#    environment:
+#      - SERVER_PORT= 8282
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://event-manager-db/event_manager
+#    networks:
+#      - shared_network
+
+  event-manager-db:
+    image: postgres:14.7-alpine
+    environment:
+      POSTGRES_USER: event-manager-admin
+      POSTGRES_PASSWORD: password
+    ports:
+      - "15434:5432"
+    volumes:
+      - ./infrastructure/db/create_db.sql:/docker-entrypoint-initdb.d/create_db.sql
+      - db-data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - shared_network
+
+volumes:
+  db-data:
+
+networks:
+  shared_network:
+    external: true
