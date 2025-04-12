@@ -10,7 +10,9 @@ import com.example.event_manager.service.EventManagerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.security.RolesAllowed;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,9 +23,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
+import static com.example.event_manager.util.AuthorizationStringUtil.*;
+
 @RestController
 @RequestMapping("/events")
 @RequiredArgsConstructor
+@SecurityRequirement(name = AUTHORIZATION)
 @Tag(name = "Мероприятия и работы", description = "Позволяет планировать и управлять мероприятиями и проведенными работами")
 public class EventManagerController {
 
@@ -36,6 +41,7 @@ public class EventManagerController {
             summary = "Создание нового мероприятия",
             description = "Записывает в базу данных новое мероприятие"
     )
+    @RolesAllowed({ADMIN, OPERATOR})
     public EventEntity saveNewEvent(@RequestBody @Parameter(description = "Сущность нового мероптиятия", required = true) CreateEventDTO createEventDTO) {
         logger.info("Пришел запрос на создание мероприятие для очага - {}", createEventDTO.getGeoPointId());
         return eventManagerService.createNewEvent(createEventDTO);
@@ -46,6 +52,7 @@ public class EventManagerController {
             summary = "Создание новой истории в рамках мероприятия",
             description = "Записывает в базу данных новую историю о работах по мероприяитию"
     )
+    @RolesAllowed({ADMIN, OPERATOR})
     @ApiResponse(responseCode = "404", description = "Event with id ... not found!")
     public EventHistoryEntity saveNewHistory(@RequestBody @Parameter(description = "Сущность записи по работам в рамках мероптиятия", required = true) CreateHistoryDTO createHistoryDTO, @PathVariable @Parameter(description = "Айди мероптиятия", required = true) UUID eventId) {
         logger.info("Пришел запрос на добавление новой истории в мероприятие с айди - {}", eventId);
@@ -88,6 +95,7 @@ public class EventManagerController {
             summary = "Обновление мероприятия",
             description = "Обновляет в базе данных существующее мероприятие"
     )
+    @RolesAllowed({ADMIN, OPERATOR})
     @ApiResponse(responseCode = "404", description = "Event with id ... not found!")
     public EventEntity updateEvent(@RequestBody @Parameter(description = "Сущность для обновления мероприятия", required = true) UpdateEventDTO updateEventDTO, @PathVariable @Parameter(description = "Айди мероптиятия", required = true) UUID eventId) {
         logger.info("Пришел запрос на обновление мероприятия с айди - {}", eventId);
@@ -98,6 +106,7 @@ public class EventManagerController {
     @Operation(
             summary = "Удаление одной истории по мероприятию"
     )
+    @RolesAllowed({ADMIN, OPERATOR})
     @ApiResponse(responseCode = "404", description = "Event with id ... not found!")
     public ResponseDTO deleteEventHistory(@PathVariable @Parameter(description = "Айди мероптиятия", required = true) UUID eventId, @PathVariable @Parameter(description = "Айди истории по мероптиятию", required = true) UUID historyId) {
         eventManagerService.deleteHistory(eventId, historyId);
@@ -109,6 +118,7 @@ public class EventManagerController {
             summary = "Удаление мероприятия",
             description = "Удаляет мероприятие и все привязанные к нему истории"
     )
+    @RolesAllowed({ADMIN, OPERATOR})
     @ApiResponse(responseCode = "404", description = "Event with id ... not found!")
     public  ResponseDTO deleteEvent(@PathVariable @Parameter(description = "Айди мероптиятия", required = true) UUID eventId) {
         eventManagerService.deleteEvent(eventId);
