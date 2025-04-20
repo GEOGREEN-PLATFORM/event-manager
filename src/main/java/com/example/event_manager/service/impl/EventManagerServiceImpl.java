@@ -16,7 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import com.example.event_manager.entity.spec.EntitySpecifications;
 
 import java.time.Instant;
 import java.util.List;
@@ -65,9 +67,18 @@ public class EventManagerServiceImpl implements EventManagerService {
     }
 
     @Override
-    public Page<EventEntity> getAllEvents(int page, int size) {
+    public Page<EventEntity> getAllEvents(int page, int size,
+                                          String status, String operatorName,
+                                          Instant startFirstDate, Instant startSecondDate,
+                                          Instant endFirstDate, Instant endSecondDate,
+                                          Instant updateFirstDate, Instant updateSecondDate) {
         Pageable pageable = PageRequest.of(page, size);
-        return eventRepository.findAll(pageable);
+        Specification<EventEntity> spec = Specification.where(EntitySpecifications.hasStatusValue(status))
+                .and(EntitySpecifications.hasOperatorNameValue(operatorName))
+                .and(EntitySpecifications.hasStartDateBetween(startFirstDate, startSecondDate))
+                .and(EntitySpecifications.hasEndDateBetween(endFirstDate, endSecondDate))
+                .and(EntitySpecifications.hasUpdateDateBetween(updateFirstDate, updateSecondDate));
+        return eventRepository.findAll(spec, pageable);
     }
 
     @Override

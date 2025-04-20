@@ -7,6 +7,7 @@ import com.example.event_manager.model.CreateHistoryDTO;
 import com.example.event_manager.model.UpdateEventDTO;
 import org.springframework.data.domain.Page;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,7 +18,10 @@ public interface EventManagerService {
 
     EventEntity getEventById(UUID eventId);
 
-    Page<EventEntity> getAllEvents(int page, int size);
+    Page<EventEntity> getAllEvents(int page, int size, String status, String operatorName,
+                                   Instant startFirstDate, Instant startSecondDate,
+                                   Instant endFirstDate, Instant endSecondDate,
+                                   Instant updateFirstDate, Instant updateSecondDate);
 
     Page<EventHistoryEntity> getEventHistory(UUID eventId, int page, int size);
 

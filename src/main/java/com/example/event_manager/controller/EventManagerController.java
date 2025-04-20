@@ -19,9 +19,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.util.UUID;
 
 import static com.example.event_manager.util.AuthorizationStringUtil.*;
@@ -73,9 +75,19 @@ public class EventManagerController {
     @Operation(
             summary = "Получение всех мероприятий"
     )
-    public SimplifiedPageResponse<EventEntity> getAllEvents(@RequestParam(defaultValue = "0") int page,
-                                          @RequestParam(defaultValue = "10") int size) {
-        Page<EventEntity> result  = eventManagerService.getAllEvents(page, size);
+    public SimplifiedPageResponse<EventEntity> getAllEvents(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String operatorName,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Instant startFirstDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Instant startSecondDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Instant endFirstDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Instant endSecondDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Instant updateFirstDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Instant updateSecondDate) {
+        Page<EventEntity> result  = eventManagerService.getAllEvents(page, size, status, operatorName,
+                startFirstDate, startSecondDate, endFirstDate, endSecondDate, updateFirstDate, updateSecondDate);
         return new SimplifiedPageResponse<>(result);
     }
 
