@@ -7,6 +7,7 @@ import com.example.event_manager.model.CreateHistoryDTO;
 import com.example.event_manager.model.ResponseDTO;
 import com.example.event_manager.model.UpdateEventDTO;
 import com.example.event_manager.service.EventManagerService;
+import com.example.event_manager.util.pagination.SimplifiedPageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -72,9 +73,10 @@ public class EventManagerController {
     @Operation(
             summary = "Получение всех мероприятий"
     )
-    public Page<EventEntity> getAllEvents(@RequestParam(defaultValue = "0") int page,
+    public SimplifiedPageResponse<EventEntity> getAllEvents(@RequestParam(defaultValue = "0") int page,
                                           @RequestParam(defaultValue = "10") int size) {
-        return eventManagerService.getAllEvents(page, size);
+        Page<EventEntity> result  = eventManagerService.getAllEvents(page, size);
+        return new SimplifiedPageResponse<>(result);
     }
 
     @GetMapping("/{eventId}/history")
@@ -83,11 +85,12 @@ public class EventManagerController {
             description = "Возвращает всю историю по мероприятию"
     )
     @ApiResponse(responseCode = "404", description = "Event with id ... not found!")
-    public Page<EventHistoryEntity> getEventHistory(@PathVariable @Parameter(description = "Айди мероптиятия", required = true) UUID eventId,
+    public SimplifiedPageResponse<EventHistoryEntity> getEventHistory(@PathVariable @Parameter(description = "Айди мероптиятия", required = true) UUID eventId,
                                                     @RequestParam(defaultValue = "0") int page,
                                                     @RequestParam(defaultValue = "10") int size) {
         logger.info("Пришел запрос на получение истории мероприятия с айди - {}", eventId);
-        return eventManagerService.getEventHistory(eventId, page, size);
+        Page<EventHistoryEntity> result = eventManagerService.getEventHistory(eventId, page, size);
+        return new SimplifiedPageResponse<>(result);
     }
 
     @PatchMapping("/{eventId}")
