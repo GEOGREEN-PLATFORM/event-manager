@@ -1,11 +1,15 @@
 package com.example.event_manager.model;
 
 import com.example.event_manager.model.image.ImageDTO;
+import com.example.event_manager.util.serialization.FlexibleInstantDeserializer;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 import java.util.List;
@@ -13,6 +17,7 @@ import java.util.UUID;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Schema(description = "Сущность записи по работам в рамках мероптиятия")
 public class CreateHistoryDTO {
 
@@ -21,6 +26,8 @@ public class CreateHistoryDTO {
     private String recordType;
 
     @PastOrPresent
+    @JsonDeserialize(using = FlexibleInstantDeserializer.class)
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
     @Schema(description = "Дата работ (по умолчанию текущая дата)", example = "2027-04-10T12:00:00+03:00")
     private Instant recordDate;
 
