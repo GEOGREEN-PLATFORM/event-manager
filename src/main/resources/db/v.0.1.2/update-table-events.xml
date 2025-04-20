@@ -10,6 +10,12 @@
     </changeSet>
 
     <changeSet id="add-status-to-entity" author="Egor">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="event" columnName="status_code"/>
+            </not>
+        </preConditions>
+
         <addColumn tableName="event">
             <column name="status_code" type="VARCHAR(50)"/>
         </addColumn>

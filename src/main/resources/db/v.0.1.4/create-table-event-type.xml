@@ -39,6 +39,12 @@
     </changeSet>
 
     <changeSet id="add-event-types" author="Egor">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM event_type WHERE code IN ('Устранение', 'Наблюдение');
+            </sqlCheck>
+        </preConditions>
+
         <insert tableName="event_type">
             <column name="code" value="Устранение"/>
             <column name="description" value="Устраняем"/>

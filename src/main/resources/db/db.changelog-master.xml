@@ -4,16 +4,17 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <include file="v.1.0.0/create-tables-event-manager.xml" relativeToChangelogFile="true" />
-    <include file="v.1.0.1/update-table-event.xml" relativeToChangelogFile="true" />
-    <include file="v.1.0.1/update-table-event-history.xml" relativeToChangelogFile="true" />
-    <include file="v.1.1.0/create-table-status.xml" relativeToChangelogFile="true" />
-    <include file="v.1.1.0/update-table-events.xml" relativeToChangelogFile="true" />
-    <include file="v.1.1.1/update-table-events.xml" relativeToChangelogFile="true" />
-    <include file="v.1.1.1/update-table-event-history.xml" relativeToChangelogFile="true" />
-    <include file="v.1.2.0/create-table-problem-type.xml" relativeToChangelogFile="true" />
-    <include file="v.1.2.0/create-table-event-type.xml" relativeToChangelogFile="true" />
-    <include file="v.1.2.0/update-table-events.xml" relativeToChangelogFile="true" />
-    <include file="v.1.2.1/update-table-event-history.xml" relativeToChangelogFile="true" />
+    <include file="v.0.1.0/create-tables-event-manager.xml" relativeToChangelogFile="true" />
+    <include file="v.0.1.1/update-table-event.xml" relativeToChangelogFile="true" />
+    <include file="v.0.1.1/update-table-event-history.xml" relativeToChangelogFile="true" />
+    <include file="v.0.1.2/create-table-status.xml" relativeToChangelogFile="true" />
+    <include file="v.0.1.2/update-table-events.xml" relativeToChangelogFile="true" />
+    <include file="v.0.1.3/update-table-events.xml" relativeToChangelogFile="true" />
+    <include file="v.0.1.3/update-table-event-history.xml" relativeToChangelogFile="true" />
+    <include file="v.0.1.4/create-table-problem-type.xml" relativeToChangelogFile="true" />
+    <include file="v.0.1.4/create-table-event-type.xml" relativeToChangelogFile="true" />
+    <include file="v.0.1.4/update-table-events.xml" relativeToChangelogFile="true" />
+    <include file="v.0.1.5/update-table-event-history.xml" relativeToChangelogFile="true" />
+    <include file="v.0.2.0/update-table-status.xml" relativeToChangelogFile="true" />
 
 </databaseChangeLog>

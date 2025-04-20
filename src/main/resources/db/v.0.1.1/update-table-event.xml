@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="add-field-name" author="Egor">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="event" columnName="name"/>
+            </not>
+        </preConditions>
+
+        <addColumn tableName="event">
+            <column name="name" type="varchar"/>
+        </addColumn>
+
+    </changeSet>
+
+    <changeSet id="add-field-author-id" author="Egor">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="event" columnName="author_id"/>
+            </not>
+        </preConditions>
+
+        <addColumn tableName="event">
+            <column name="author_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+    </changeSet>
+
+    <changeSet id="add-field-author-name" author="Egor">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="event" columnName="author_name"/>
+            </not>
+        </preConditions>
+
+        <addColumn tableName="event">
+            <column name="author_name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+    </changeSet>
+
+    <changeSet id="add-field-operator-id" author="Egor">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="event" columnName="operator_id"/>
+            </not>
+        </preConditions>
+
+        <addColumn tableName="event">
+            <column name="operator_id" type="uuid"/>
+        </addColumn>
+
+    </changeSet>
+
+    <changeSet id="add-field-operator-name" author="Egor">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="event" columnName="operator_name"/>
+            </not>
+        </preConditions>
+
+        <addColumn tableName="event">
+            <column name="operator_name" type="VARCHAR(50)"/>
+        </addColumn>
+
+    </changeSet>
+
+    <changeSet id="rename-source-id-to-geopoint-id" author="Egor">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="event" columnName="source_id"/>
+        </preConditions>
+
+        <renameColumn
+                tableName="event"
+                oldColumnName="source_id"
+                newColumnName="geo_point_id"
+                columnDataType="uuid"/>
+    </changeSet>
+
+</databaseChangeLog>

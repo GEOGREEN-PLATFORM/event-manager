@@ -4,15 +4,37 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="add-new-fields-to-event-history" author="Egor">
+    <changeSet id="add-operator-id-to-event-history" author="Egor">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="event_history" columnName="operator_id"/>
+            </not>
+        </preConditions>
 
         <addColumn tableName="event_history">
             <column name="operator_id" type="uuid"/>
         </addColumn>
+    </changeSet>
+
+    <changeSet id="add-operator-name-to-event-history" author="Egor">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="event_history" columnName="operator_name"/>
+            </not>
+        </preConditions>
 
         <addColumn tableName="event_history">
             <column name="operator_name" type="VARCHAR(50)"/>
         </addColumn>
+
+    </changeSet>
+
+    <changeSet id="add-create-date-to-event-history" author="Egor">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="event_history" columnName="create_date"/>
+            </not>
+        </preConditions>
 
         <addColumn tableName="event_history">
             <column name="create_date" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">

@@ -6,6 +6,12 @@
 
 
     <changeSet id="add-problem-to-entity" author="Egor">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="event" columnName="problem_area_type"/>
+            </not>
+        </preConditions>
+
         <addColumn tableName="event">
             <column name="problem_area_type" type="VARCHAR(50)"/>
         </addColumn>
