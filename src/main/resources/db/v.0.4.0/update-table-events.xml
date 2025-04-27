@@ -55,7 +55,25 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="install_pg_trgm_extension1" author="your_name">
+        <sql>CREATE EXTENSION IF NOT EXISTS pg_trgm;</sql>
+    </changeSet>
 
+    <changeSet id="add_operator_full_text_search1" author="your_name">
+        <sql>TRUNCATE TABLE event RESTART IDENTITY CASCADE;</sql>
 
+        <sql>
+            ALTER TABLE event ADD COLUMN operator_full_text text
+                GENERATED ALWAYS AS (
+                        coalesce(operator->>'firstName', '') || ' ' ||
+                        coalesce(operator->>'lastName', '') || ' ' ||
+                        coalesce(operator->>'patronymic', '')
+                    ) STORED;
+        </sql>
+
+        <sql>
+            CREATE INDEX idx_event_operator_full_text ON event USING gin (operator_full_text gin_trgm_ops);
+        </sql>
+    </changeSet>
 
 </databaseChangeLog>

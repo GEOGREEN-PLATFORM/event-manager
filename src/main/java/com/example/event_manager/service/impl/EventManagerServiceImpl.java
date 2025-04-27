@@ -73,14 +73,15 @@ public class EventManagerServiceImpl implements EventManagerService {
                                           String status, UUID operatorId,
                                           Instant startFirstDate, Instant startSecondDate,
                                           Instant endFirstDate, Instant endSecondDate,
-                                          Instant updateFirstDate, Instant updateSecondDate, String search) {
+                                          Instant updateFirstDate, Instant updateSecondDate, String search, String operatorSearch) {
         Pageable pageable = PageRequest.of(page, size);
         Specification<EventEntity> spec = Specification.where(EntitySpecifications.hasStatusValue(status))
                 .and(EntitySpecifications.hasOperatorIdValue(operatorId))
                 .and(EntitySpecifications.hasStartDateBetween(startFirstDate, startSecondDate))
                 .and(EntitySpecifications.hasEndDateBetween(endFirstDate, endSecondDate))
                 .and(EntitySpecifications.hasUpdateDateBetween(updateFirstDate, updateSecondDate))
-                .and(EntitySpecifications.nameContains(search));
+                .and(EntitySpecifications.nameContains(search))
+                .and(EntitySpecifications.operaotrNameContains(operatorSearch));
         return eventRepository.findAll(spec, pageable);
     }
 

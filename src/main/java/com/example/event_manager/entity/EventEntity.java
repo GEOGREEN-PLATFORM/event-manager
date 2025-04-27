@@ -68,4 +68,7 @@ public class EventEntity {
     @JdbcTypeCode(SqlTypes.JSON)
     private UserDTO author;
 
+    @Column(name = "operator_full_text", insertable = false, updatable = false)
+    private String operatorFullText;
+
 }
