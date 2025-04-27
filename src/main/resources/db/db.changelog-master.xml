@@ -16,5 +16,6 @@
     <include file="v.0.1.4/update-table-events.xml" relativeToChangelogFile="true" />
     <include file="v.0.1.5/update-table-event-history.xml" relativeToChangelogFile="true" />
     <include file="v.0.2.0/update-table-status.xml" relativeToChangelogFile="true" />
+    <include file="v.0.4.0/update-table-events.xml" relativeToChangelogFile="true" />
 
 </databaseChangeLog>

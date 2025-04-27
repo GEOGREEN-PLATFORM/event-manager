@@ -6,6 +6,7 @@ import com.example.event_manager.exception.custom.*;
 import com.example.event_manager.model.CreateEventDTO;
 import com.example.event_manager.model.CreateHistoryDTO;
 import com.example.event_manager.model.UpdateEventDTO;
+import com.example.event_manager.model.UserDTO;
 import com.example.event_manager.repository.*;
 import com.example.event_manager.service.EventManagerService;
 import jakarta.transaction.Transactional;
@@ -23,6 +24,7 @@ import com.example.event_manager.entity.spec.EntitySpecifications;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 @RequiredArgsConstructor
@@ -71,14 +73,15 @@ public class EventManagerServiceImpl implements EventManagerService {
                                           String status, UUID operatorId,
                                           Instant startFirstDate, Instant startSecondDate,
                                           Instant endFirstDate, Instant endSecondDate,
-                                          Instant updateFirstDate, Instant updateSecondDate, String search) {
+                                          Instant updateFirstDate, Instant updateSecondDate, String search, String operatorSearch) {
         Pageable pageable = PageRequest.of(page, size);
         Specification<EventEntity> spec = Specification.where(EntitySpecifications.hasStatusValue(status))
                 .and(EntitySpecifications.hasOperatorIdValue(operatorId))
                 .and(EntitySpecifications.hasStartDateBetween(startFirstDate, startSecondDate))
                 .and(EntitySpecifications.hasEndDateBetween(endFirstDate, endSecondDate))
                 .and(EntitySpecifications.hasUpdateDateBetween(updateFirstDate, updateSecondDate))
-                .and(EntitySpecifications.nameContains(search));
+                .and(EntitySpecifications.nameContains(search))
+                .and(EntitySpecifications.operaotrNameContains(operatorSearch));
         return eventRepository.findAll(spec, pageable);
     }
 
@@ -118,9 +121,7 @@ public class EventManagerServiceImpl implements EventManagerService {
             }
         }
 
-        eventEntity.setOperatorId(updateEventDTO.getOperatorId() != null ? updateEventDTO.getOperatorId() : eventEntity.getOperatorId());
-        eventEntity.setOperatorName(updateEventDTO.getOperatorId() != null ? "Иванов И.И." : eventEntity.getOperatorName());
-        // TODO запрашивать имя у Даши
+        eventEntity.setOperator(updateEventDTO.getOperatorId() != null ? getUserById(updateEventDTO.getOperatorId()) : eventEntity.getOperator());
 
         logger.info("Мероприятие с айди {} обновлено в базе данных", eventId);
         return eventRepository.save(eventEntity);
@@ -177,13 +178,8 @@ public class EventManagerServiceImpl implements EventManagerService {
         eventEntity.setName(createEventDTO.getName());
         eventEntity.setDescription(createEventDTO.getDescription());
 
-        eventEntity.setAuthorId(createEventDTO.getAuthorId());
-        eventEntity.setAuthorName("Иванов И.И.");
-        // TODO запрашивать имя у Даши
-
-        eventEntity.setOperatorId(createEventDTO.getOperatorId());
-        eventEntity.setOperatorName(createEventDTO.getOperatorId() != null ? "Иванов И.И." : null);
-        // TODO запрашивать имя у Даши
+        eventEntity.setAuthor(getUserById(createEventDTO.getAuthorId()));
+        eventEntity.setOperator(getUserById(createEventDTO.getOperatorId()));
 
         ProblemTypeEntity problemTypeEntity = problemTypeRepository.findByCode(createEventDTO.getProblemAreaType());
         if (problemTypeEntity != null) {
@@ -222,9 +218,7 @@ public class EventManagerServiceImpl implements EventManagerService {
         eventHistoryEntity.setDescription(createHistoryDTO.getDescription() != null ? createHistoryDTO.getDescription() : "");
         eventHistoryEntity.setPhotos(createHistoryDTO.getPhotos() != null ? createHistoryDTO.getPhotos() : List.of());
 
-        eventHistoryEntity.setOperatorId(createHistoryDTO.getOperatorId());
-        eventHistoryEntity.setOperatorName("Иванов И.И.");
-        // TODO запрашивать имя у Даши
+        eventHistoryEntity.setOperator(getUserById(createHistoryDTO.getOperatorId()));
 
         eventHistoryEntity.setCreateDate(Instant.now());
 
@@ -237,5 +231,17 @@ public class EventManagerServiceImpl implements EventManagerService {
         }
 
         return eventHistoryEntity;
+    }
+
+    private UserDTO getUserById(UUID userId) {
+        // TODO запрашивать имя у Даши
+        if (userId == null) {
+            return null;
+        }
+        return List.of(
+                new UserDTO(userId, "Иван", "Иванов", "Иванович"),
+                new UserDTO(userId, "Пётр", "Петров", "Петрович"),
+                new UserDTO(userId, "Анна", "Сидорова", "Ивановна")
+        ).get(ThreadLocalRandom.current().nextInt(3));
     }
 }

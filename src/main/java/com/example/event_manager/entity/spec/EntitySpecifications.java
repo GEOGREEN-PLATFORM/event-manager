@@ -1,6 +1,7 @@
 package com.example.event_manager.entity.spec;
 
 import com.example.event_manager.entity.EventEntity;
+import io.micrometer.common.util.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.Instant;
@@ -59,6 +60,19 @@ public class EntitySpecifications {
             }
             return cb.like(
                     cb.lower(root.get("name")),
+                    "%" + searchTerm.toLowerCase() + "%"
+            );
+        };
+    }
+
+    public static Specification<EventEntity> operaotrNameContains(String searchTerm) {
+        return (root, query, cb) -> {
+            if (StringUtils.isEmpty(searchTerm)) {
+                return cb.conjunction();
+            }
+
+            return cb.like(
+                    cb.lower(root.get("operatorFullText")),
                     "%" + searchTerm.toLowerCase() + "%"
             );
         };

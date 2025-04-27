@@ -86,9 +86,10 @@ public class EventManagerController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Instant endSecondDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Instant updateFirstDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Instant updateSecondDate,
-            @RequestParam(required = false) String search) {
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String operatorSearch) {
         Page<EventEntity> result  = eventManagerService.getAllEvents(page, size, status, operatorId,
-                startFirstDate, startSecondDate, endFirstDate, endSecondDate, updateFirstDate, updateSecondDate, search);
+                startFirstDate, startSecondDate, endFirstDate, endSecondDate, updateFirstDate, updateSecondDate, search, operatorSearch);
         return new SimplifiedPageResponse<>(result);
     }
 

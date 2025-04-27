@@ -1,10 +1,10 @@
 package com.example.event_manager.entity;
 
 import com.example.event_manager.converter.ImageListConverter;
+import com.example.event_manager.model.UserDTO;
 import com.example.event_manager.model.image.ImageDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
@@ -46,15 +46,12 @@ public class EventHistoryEntity {
     @Convert(converter = ImageListConverter.class)
     private List<ImageDTO> photos;
 
-    @Column(name = "operator_name")
-    @Size(max = 50)
-    private String operatorName;
-
-    @Column(name = "operator_id")
-    private UUID operatorId;
-
     @Column(name = "create_date", nullable = false, updatable = false)
     private Instant createDate;
+
+    @Column(name = "operator", columnDefinition = "jsonb")
+    @JdbcTypeCode(SqlTypes.JSON)
+    private UserDTO operator;
 
 
 }
