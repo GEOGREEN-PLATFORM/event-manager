@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="change_record_date_to_timestamp_with_conversion" author="Egor">
+        <addColumn tableName="event_history">
+            <column name="record_date_tmp" type="TIMESTAMP"/>
+        </addColumn>
+
+        <sql>UPDATE event_history SET record_date_tmp = record_date::timestamp;</sql>
+
+        <dropColumn tableName="event_history" columnName="record_date"/>
+
+        <renameColumn
+                tableName="event_history"
+                oldColumnName="record_date_tmp"
+                newColumnName="record_date"/>
+    </changeSet>
+
+</databaseChangeLog>

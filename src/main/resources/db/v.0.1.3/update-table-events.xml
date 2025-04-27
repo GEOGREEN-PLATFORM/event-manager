@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="change_start_date_to_timestamp_with_conversion" author="Egor">
+        <addColumn tableName="event">
+            <column name="start_date_tmp" type="TIMESTAMP"/>
+        </addColumn>
+
+        <sql>UPDATE event SET start_date_tmp = start_date::timestamp;</sql>
+
+        <dropColumn tableName="event" columnName="start_date"/>
+
+        <renameColumn
+                tableName="event"
+                oldColumnName="start_date_tmp"
+                newColumnName="start_date"/>
+    </changeSet>
+
+    <changeSet id="change_end_date_to_timestamp_with_conversion" author="Egor">
+        <addColumn tableName="event">
+            <column name="end_date_tmp" type="TIMESTAMP"/>
+        </addColumn>
+
+        <sql>UPDATE event SET end_date_tmp = end_date::timestamp;</sql>
+
+        <dropColumn tableName="event" columnName="end_date"/>
+
+        <renameColumn
+                tableName="event"
+                oldColumnName="end_date_tmp"
+                newColumnName="end_date"/>
+    </changeSet>
+
+    <changeSet id="change_last_update_date_to_timestamp_with_conversion" author="Egor">
+        <addColumn tableName="event">
+            <column name="last_update_date_tmp" type="TIMESTAMP"/>
+        </addColumn>
+
+        <sql>UPDATE event SET last_update_date_tmp = last_update_date::timestamp;</sql>
+
+        <dropColumn tableName="event" columnName="last_update_date"/>
+
+        <renameColumn
+                tableName="event"
+                oldColumnName="last_update_date_tmp"
+                newColumnName="last_update_date"/>
+    </changeSet>
+
+</databaseChangeLog>

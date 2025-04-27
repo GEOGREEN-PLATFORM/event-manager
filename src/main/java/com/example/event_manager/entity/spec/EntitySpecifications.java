@@ -1,0 +1,53 @@
+package com.example.event_manager.entity.spec;
+
+import com.example.event_manager.entity.EventEntity;
+import org.springframework.data.jpa.domain.Specification;
+
+import java.time.Instant;
+
+public class EntitySpecifications {
+    public static Specification<EventEntity> hasStatusValue(String fieldValue) {
+        return (root, query, criteriaBuilder) -> {
+            if (fieldValue == null || fieldValue.isEmpty()) {
+                return criteriaBuilder.conjunction();
+            }
+            return criteriaBuilder.equal(root.get("statusCode"), fieldValue);
+        };
+    }
+
+    public static Specification<EventEntity> hasOperatorNameValue(String fieldValue) {
+        return (root, query, criteriaBuilder) -> {
+            if (fieldValue == null || fieldValue.isEmpty()) {
+                return criteriaBuilder.conjunction();
+            }
+            return criteriaBuilder.equal(root.get("operatorName"), fieldValue);
+        };
+    }
+
+    public static Specification<EventEntity> hasStartDateBetween(Instant startDate, Instant endDate) {
+        return (root, query, criteriaBuilder) -> {
+            if (startDate == null || endDate == null) {
+                return criteriaBuilder.conjunction();
+            }
+            return criteriaBuilder.between(root.get("startDate"), startDate, endDate);
+        };
+    }
+
+    public static Specification<EventEntity> hasEndDateBetween(Instant startDate, Instant endDate) {
+        return (root, query, criteriaBuilder) -> {
+            if (startDate == null || endDate == null) {
+                return criteriaBuilder.conjunction();
+            }
+            return criteriaBuilder.between(root.get("endDate"), startDate, endDate);
+        };
+    }
+
+    public static Specification<EventEntity> hasUpdateDateBetween(Instant startDate, Instant endDate) {
+        return (root, query, criteriaBuilder) -> {
+            if (startDate == null || endDate == null) {
+                return criteriaBuilder.conjunction();
+            }
+            return criteriaBuilder.between(root.get("lastUpdateDate"), startDate, endDate);
+        };
+    }
+}

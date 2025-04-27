@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet logicalFilePath="modify-table-event-type"
+               id="modify-table-event-type" author="Egor">
+
+        <createTable tableName="event_type">
+            <column name="id" type="SERIAL">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+
+            <column name="code" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="description" type="VARCHAR(255)"/>
+
+            <column name="is_default" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+    </changeSet>
+
+    <changeSet id="add-default-event-type" author="Egor">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM event_type WHERE is_default = true
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="event_type">
+            <column name="code" value="Не определен"/>
+            <column name="is_default" valueBoolean="true"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="add-event-types" author="Egor">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM event_type WHERE code IN ('Устранение', 'Наблюдение');
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="event_type">
+            <column name="code" value="Устранение"/>
+            <column name="description" value="Устраняем"/>
+            <column name="is_default" valueBoolean="false"/>
+        </insert>
+
+        <insert tableName="event_type">
+            <column name="code" value="Наблюдение"/>
+            <column name="description" value="Ну наблюдаем"/>
+            <column name="is_default" valueBoolean="false"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
