@@ -18,7 +18,7 @@ public interface EventManagerService {
 
     EventEntity getEventById(UUID eventId);
 
-    Page<EventEntity> getAllEvents(int page, int size, String status, String operatorName,
+    Page<EventEntity> getAllEvents(int page, int size, String status, UUID operatorId,
                                    Instant startFirstDate, Instant startSecondDate,
                                    Instant endFirstDate, Instant endSecondDate,
                                    Instant updateFirstDate, Instant updateSecondDate, String search);

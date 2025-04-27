@@ -68,13 +68,13 @@ public class EventManagerServiceImpl implements EventManagerService {
 
     @Override
     public Page<EventEntity> getAllEvents(int page, int size,
-                                          String status, String operatorName,
+                                          String status, UUID operatorId,
                                           Instant startFirstDate, Instant startSecondDate,
                                           Instant endFirstDate, Instant endSecondDate,
                                           Instant updateFirstDate, Instant updateSecondDate, String search) {
         Pageable pageable = PageRequest.of(page, size);
         Specification<EventEntity> spec = Specification.where(EntitySpecifications.hasStatusValue(status))
-                .and(EntitySpecifications.hasOperatorNameValue(operatorName))
+                .and(EntitySpecifications.hasOperatorIdValue(operatorId))
                 .and(EntitySpecifications.hasStartDateBetween(startFirstDate, startSecondDate))
                 .and(EntitySpecifications.hasEndDateBetween(endFirstDate, endSecondDate))
                 .and(EntitySpecifications.hasUpdateDateBetween(updateFirstDate, updateSecondDate))
