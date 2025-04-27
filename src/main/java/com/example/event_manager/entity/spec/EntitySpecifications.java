@@ -4,6 +4,7 @@ import com.example.event_manager.entity.EventEntity;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.Instant;
+import java.util.UUID;
 
 public class EntitySpecifications {
     public static Specification<EventEntity> hasStatusValue(String fieldValue) {
@@ -15,12 +16,12 @@ public class EntitySpecifications {
         };
     }
 
-    public static Specification<EventEntity> hasOperatorNameValue(String fieldValue) {
+    public static Specification<EventEntity> hasOperatorIdValue(UUID fieldValue) {
         return (root, query, criteriaBuilder) -> {
-            if (fieldValue == null || fieldValue.isEmpty()) {
+            if (fieldValue == null) {
                 return criteriaBuilder.conjunction();
             }
-            return criteriaBuilder.equal(root.get("operatorName"), fieldValue);
+            return criteriaBuilder.equal(root.get("operatorId"), fieldValue);
         };
     }
 
@@ -48,6 +49,18 @@ public class EntitySpecifications {
                 return criteriaBuilder.conjunction();
             }
             return criteriaBuilder.between(root.get("lastUpdateDate"), startDate, endDate);
+        };
+    }
+
+    public static Specification<EventEntity> nameContains(String searchTerm) {
+        return (root, query, cb) -> {
+            if (searchTerm == null || searchTerm.isEmpty()) {
+                return null;
+            }
+            return cb.like(
+                    cb.lower(root.get("name")),
+                    "%" + searchTerm.toLowerCase() + "%"
+            );
         };
     }
 }
