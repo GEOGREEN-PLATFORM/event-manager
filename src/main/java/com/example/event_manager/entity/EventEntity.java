@@ -1,9 +1,12 @@
 package com.example.event_manager.entity;
 
+import com.example.event_manager.model.UserDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -57,19 +60,12 @@ public class EventEntity {
     @Size(max = 256)
     private String name;
 
-    @Column(name = "operator_name")
-    @Size(max = 50)
-    private String operatorName;
+    @Column(name = "operator", columnDefinition = "jsonb")
+    @JdbcTypeCode(SqlTypes.JSON)
+    private UserDTO operator;
 
-    @Column(name = "operator_id")
-    private UUID operatorId;
+    @Column(name = "author")
+    @JdbcTypeCode(SqlTypes.JSON)
+    private UserDTO author;
 
-    @NotNull
-    @Column(name = "author_name")
-    @Size(max = 50)
-    private String authorName;
-
-    @NotNull
-    @Column(name = "author_id")
-    private UUID authorId;
 }
