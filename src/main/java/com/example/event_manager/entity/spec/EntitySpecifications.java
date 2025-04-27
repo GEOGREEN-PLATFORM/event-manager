@@ -50,4 +50,16 @@ public class EntitySpecifications {
             return criteriaBuilder.between(root.get("lastUpdateDate"), startDate, endDate);
         };
     }
+
+    public static Specification<EventEntity> nameContains(String searchTerm) {
+        return (root, query, cb) -> {
+            if (searchTerm == null || searchTerm.isEmpty()) {
+                return null;
+            }
+            return cb.like(
+                    cb.lower(root.get("name")),
+                    "%" + searchTerm.toLowerCase() + "%"
+            );
+        };
+    }
 }
