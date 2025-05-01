@@ -3,6 +3,7 @@ package com.example.event_manager.service.impl;
 import com.example.event_manager.controller.EventManagerController;
 import com.example.event_manager.entity.*;
 import com.example.event_manager.exception.custom.*;
+import com.example.event_manager.feignClient.FeignClientUserService;
 import com.example.event_manager.model.CreateEventDTO;
 import com.example.event_manager.model.CreateHistoryDTO;
 import com.example.event_manager.model.UpdateEventDTO;
@@ -24,7 +25,6 @@ import com.example.event_manager.entity.spec.EntitySpecifications;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 @RequiredArgsConstructor
@@ -45,20 +45,23 @@ public class EventManagerServiceImpl implements EventManagerService {
     @Autowired
     private EventTypeRepository eventTypeRepository;
 
+    @Autowired
+    private final FeignClientUserService feignClientUserService;
+
     private static final Logger logger = LoggerFactory.getLogger(EventManagerController.class);
 
     @Override
     @Transactional
-    public EventEntity createNewEvent(CreateEventDTO createEventDTO) {
-        return eventRepository.save(eventDtoToEntity(createEventDTO));
+    public EventEntity createNewEvent(CreateEventDTO createEventDTO, String token) {
+        return eventRepository.save(eventDtoToEntity(createEventDTO, token));
     }
 
     @Override
     @Transactional
-    public EventHistoryEntity createNewHistory(CreateHistoryDTO createHistoryDTO, UUID eventId) {
+    public EventHistoryEntity createNewHistory(CreateHistoryDTO createHistoryDTO, UUID eventId, String token) {
         getEventById(eventId);
         logger.info("Мероприятие с айди {} найдено в базе данных", eventId);
-        return eventHistoryRepository.save(eventHistoryToEntity(createHistoryDTO, eventId));
+        return eventHistoryRepository.save(eventHistoryToEntity(createHistoryDTO, eventId, token));
     }
 
     @Override
@@ -100,7 +103,7 @@ public class EventManagerServiceImpl implements EventManagerService {
 
     @Override
     @Transactional
-    public EventEntity updateEvent(UpdateEventDTO updateEventDTO, UUID eventId) {
+    public EventEntity updateEvent(UpdateEventDTO updateEventDTO, UUID eventId, String token) {
         EventEntity eventEntity = getEventById(eventId);
 
         eventEntity.setLastUpdateDate(Instant.now());
@@ -121,7 +124,7 @@ public class EventManagerServiceImpl implements EventManagerService {
             }
         }
 
-        eventEntity.setOperator(updateEventDTO.getOperatorId() != null ? getUserById(updateEventDTO.getOperatorId()) : eventEntity.getOperator());
+        eventEntity.setOperator(updateEventDTO.getOperatorId() != null ? getUserById(updateEventDTO.getOperatorId(), token) : eventEntity.getOperator());
 
         logger.info("Мероприятие с айди {} обновлено в базе данных", eventId);
         return eventRepository.save(eventEntity);
@@ -155,7 +158,7 @@ public class EventManagerServiceImpl implements EventManagerService {
         );
     }
 
-    private EventEntity eventDtoToEntity(CreateEventDTO createEventDTO) {
+    private EventEntity eventDtoToEntity(CreateEventDTO createEventDTO, String token) {
         // TODO Сделать проверку на корректное dto
         EventEntity eventEntity = new EventEntity();
 
@@ -178,8 +181,8 @@ public class EventManagerServiceImpl implements EventManagerService {
         eventEntity.setName(createEventDTO.getName());
         eventEntity.setDescription(createEventDTO.getDescription());
 
-        eventEntity.setAuthor(getUserById(createEventDTO.getAuthorId()));
-        eventEntity.setOperator(getUserById(createEventDTO.getOperatorId()));
+        eventEntity.setAuthor(getUserById(createEventDTO.getAuthorId(), token));
+        eventEntity.setOperator(getUserById(createEventDTO.getOperatorId(), token));
 
         ProblemTypeEntity problemTypeEntity = problemTypeRepository.findByCode(createEventDTO.getProblemAreaType());
         if (problemTypeEntity != null) {
@@ -201,7 +204,7 @@ public class EventManagerServiceImpl implements EventManagerService {
         return eventEntity;
     }
 
-    private EventHistoryEntity eventHistoryToEntity(CreateHistoryDTO createHistoryDTO, UUID eventId) {
+    private EventHistoryEntity eventHistoryToEntity(CreateHistoryDTO createHistoryDTO, UUID eventId, String token) {
         // TODO Сделать проверку на корректное dto
         EventHistoryEntity eventHistoryEntity = new EventHistoryEntity();
 
@@ -218,7 +221,7 @@ public class EventManagerServiceImpl implements EventManagerService {
         eventHistoryEntity.setDescription(createHistoryDTO.getDescription() != null ? createHistoryDTO.getDescription() : "");
         eventHistoryEntity.setPhotos(createHistoryDTO.getPhotos() != null ? createHistoryDTO.getPhotos() : List.of());
 
-        eventHistoryEntity.setOperator(getUserById(createHistoryDTO.getOperatorId()));
+        eventHistoryEntity.setOperator(getUserById(createHistoryDTO.getOperatorId(), token));
 
         eventHistoryEntity.setCreateDate(Instant.now());
 
@@ -233,15 +236,10 @@ public class EventManagerServiceImpl implements EventManagerService {
         return eventHistoryEntity;
     }
 
-    private UserDTO getUserById(UUID userId) {
-        // TODO запрашивать имя у Даши
+    private UserDTO getUserById(UUID userId, String token) {
         if (userId == null) {
             return null;
         }
-        return List.of(
-                new UserDTO(userId, "Иван", "Иванов", "Иванович"),
-                new UserDTO(userId, "Пётр", "Петров", "Петрович"),
-                new UserDTO(userId, "Анна", "Сидорова", "Ивановна")
-        ).get(ThreadLocalRandom.current().nextInt(3));
+        return feignClientUserService.getUserById(token, userId);
     }
 }

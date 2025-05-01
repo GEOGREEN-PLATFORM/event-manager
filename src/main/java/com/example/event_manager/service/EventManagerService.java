@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.UUID;
 
 public interface EventManagerService {
-    EventEntity createNewEvent(CreateEventDTO createEventDTO);
+    EventEntity createNewEvent(CreateEventDTO createEventDTO, String token);
 
-    EventHistoryEntity createNewHistory(CreateHistoryDTO createHistoryDTO, UUID eventId);
+    EventHistoryEntity createNewHistory(CreateHistoryDTO createHistoryDTO, UUID eventId, String token);
 
     EventEntity getEventById(UUID eventId);
 
@@ -27,7 +27,7 @@ public interface EventManagerService {
 
     List<EventHistoryEntity> getEventHistory(UUID eventId);
 
-    EventEntity updateEvent(UpdateEventDTO updateEventDTO, UUID eventId);
+    EventEntity updateEvent(UpdateEventDTO updateEventDTO, UUID eventId, String token);
 
     EventHistoryEntity getEventHistoryById(UUID historyId);
 
