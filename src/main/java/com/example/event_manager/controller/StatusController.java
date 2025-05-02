@@ -21,7 +21,7 @@ import java.util.Optional;
 import static com.example.event_manager.util.AuthorizationStringUtil.*;
 
 @RestController
-@RequestMapping("/status")
+@RequestMapping("/event/status")
 @RequiredArgsConstructor
 @SecurityRequirement(name = AUTHORIZATION)
 @Tag(name = "Статус", description = "Позволяет управлять статусами задач")

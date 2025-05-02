@@ -29,7 +29,7 @@ import java.util.UUID;
 import static com.example.event_manager.util.AuthorizationStringUtil.*;
 
 @RestController
-@RequestMapping("/events")
+@RequestMapping("/event")
 @RequiredArgsConstructor
 @SecurityRequirement(name = AUTHORIZATION)
 @Tag(name = "Мероприятия и работы", description = "Позволяет планировать и управлять мероприятиями и проведенными работами")
@@ -39,15 +39,15 @@ public class EventManagerController {
     private EventManagerService eventManagerService;
     private static final Logger logger = LoggerFactory.getLogger(EventManagerController.class);
 
-    @PostMapping
+    @PostMapping("/create")
     @Operation(
             summary = "Создание нового мероприятия",
             description = "Записывает в базу данных новое мероприятие"
     )
     @RolesAllowed({ADMIN, OPERATOR})
-    public EventEntity saveNewEvent(@RequestBody @Parameter(description = "Сущность нового мероптиятия", required = true) CreateEventDTO createEventDTO) {
+    public EventEntity saveNewEvent(@RequestHeader("Authorization") String token, @RequestBody @Parameter(description = "Сущность нового мероптиятия", required = true) CreateEventDTO createEventDTO) {
         logger.info("Пришел запрос на создание мероприятие для очага - {}", createEventDTO.getGeoPointId());
-        return eventManagerService.createNewEvent(createEventDTO);
+        return eventManagerService.createNewEvent(createEventDTO, token);
     }
 
     @PostMapping("/{eventId}/history")
@@ -57,9 +57,9 @@ public class EventManagerController {
     )
     @RolesAllowed({ADMIN, OPERATOR})
     @ApiResponse(responseCode = "404", description = "Event with id ... not found!")
-    public EventHistoryEntity saveNewHistory(@RequestBody @Parameter(description = "Сущность записи по работам в рамках мероптиятия", required = true) CreateHistoryDTO createHistoryDTO, @PathVariable @Parameter(description = "Айди мероптиятия", required = true) UUID eventId) {
+    public EventHistoryEntity saveNewHistory(@RequestHeader("Authorization") String token, @RequestBody @Parameter(description = "Сущность записи по работам в рамках мероптиятия", required = true) CreateHistoryDTO createHistoryDTO, @PathVariable @Parameter(description = "Айди мероптиятия", required = true) UUID eventId) {
         logger.info("Пришел запрос на добавление новой истории в мероприятие с айди - {}", eventId);
-        return eventManagerService.createNewHistory(createHistoryDTO, eventId);
+        return eventManagerService.createNewHistory(createHistoryDTO, eventId, token);
     }
 
     @GetMapping("/{eventId}")
@@ -114,9 +114,9 @@ public class EventManagerController {
     )
     @RolesAllowed({ADMIN, OPERATOR})
     @ApiResponse(responseCode = "404", description = "Event with id ... not found!")
-    public EventEntity updateEvent(@RequestBody @Parameter(description = "Сущность для обновления мероприятия", required = true) UpdateEventDTO updateEventDTO, @PathVariable @Parameter(description = "Айди мероптиятия", required = true) UUID eventId) {
+    public EventEntity updateEvent(@RequestHeader("Authorization") String token, @RequestBody @Parameter(description = "Сущность для обновления мероприятия", required = true) UpdateEventDTO updateEventDTO, @PathVariable @Parameter(description = "Айди мероптиятия", required = true) UUID eventId) {
         logger.info("Пришел запрос на обновление мероприятия с айди - {}", eventId);
-        return eventManagerService.updateEvent(updateEventDTO, eventId);
+        return eventManagerService.updateEvent(updateEventDTO, eventId, token);
     }
 
     @DeleteMapping("/{eventId}/history/{historyId}")

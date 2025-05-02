@@ -64,6 +64,9 @@ public class EventEntity {
     @JdbcTypeCode(SqlTypes.JSON)
     private UserDTO operator;
 
+    @Column(name = "operator_id", insertable = false, updatable = false)
+    private UUID operatorId;
+
     @Column(name = "author")
     @JdbcTypeCode(SqlTypes.JSON)
     private UserDTO author;

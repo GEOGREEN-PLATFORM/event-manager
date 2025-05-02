@@ -76,4 +76,17 @@
         </sql>
     </changeSet>
 
+    <changeSet id="add_operator_id_column" author="your_name">
+        <sql>TRUNCATE TABLE event RESTART IDENTITY CASCADE;</sql>
+
+        <sql>
+            ALTER TABLE event
+                ADD COLUMN operator_id uuid GENERATED ALWAYS AS ((operator->>'id')::uuid) STORED;
+        </sql>
+
+        <sql>
+            CREATE INDEX idx_event_history_operator_id ON event (operator_id);
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>
