@@ -21,7 +21,7 @@ import java.util.Optional;
 import static com.example.event_manager.util.AuthorizationStringUtil.*;
 
 @RestController
-@RequestMapping("/eventType")
+@RequestMapping("/event/type")
 @RequiredArgsConstructor
 @SecurityRequirement(name = AUTHORIZATION)
 @Tag(name = "Тип мероприятия", description = "Позволяет управлять типами мероприятий")
