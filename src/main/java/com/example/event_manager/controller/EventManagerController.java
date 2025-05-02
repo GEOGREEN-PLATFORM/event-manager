@@ -29,7 +29,7 @@ import java.util.UUID;
 import static com.example.event_manager.util.AuthorizationStringUtil.*;
 
 @RestController
-@RequestMapping("/events")
+@RequestMapping("/event")
 @RequiredArgsConstructor
 @SecurityRequirement(name = AUTHORIZATION)
 @Tag(name = "Мероприятия и работы", description = "Позволяет планировать и управлять мероприятиями и проведенными работами")
@@ -39,7 +39,7 @@ public class EventManagerController {
     private EventManagerService eventManagerService;
     private static final Logger logger = LoggerFactory.getLogger(EventManagerController.class);
 
-    @PostMapping
+    @PostMapping("/create")
     @Operation(
             summary = "Создание нового мероприятия",
             description = "Записывает в базу данных новое мероприятие"
