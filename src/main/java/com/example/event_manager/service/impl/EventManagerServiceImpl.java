@@ -8,6 +8,8 @@ import com.example.event_manager.model.CreateEventDTO;
 import com.example.event_manager.model.CreateHistoryDTO;
 import com.example.event_manager.model.UpdateEventDTO;
 import com.example.event_manager.model.UserDTO;
+import com.example.event_manager.producer.KafkaProducerService;
+import com.example.event_manager.producer.dto.UpdateElementDTO;
 import com.example.event_manager.repository.*;
 import com.example.event_manager.service.EventManagerService;
 import jakarta.transaction.Transactional;
@@ -23,7 +25,10 @@ import org.springframework.stereotype.Service;
 import com.example.event_manager.entity.spec.EntitySpecifications;
 
 import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -47,6 +52,9 @@ public class EventManagerServiceImpl implements EventManagerService {
 
     @Autowired
     private final FeignClientUserService feignClientUserService;
+
+    @Autowired
+    private KafkaProducerService kafkaProducerService;
 
     private static final Logger logger = LoggerFactory.getLogger(EventManagerController.class);
 
@@ -110,13 +118,29 @@ public class EventManagerServiceImpl implements EventManagerService {
         eventEntity.setDescription(updateEventDTO.getDescription() != null ? updateEventDTO.getDescription() : eventEntity.getDescription());
         eventEntity.setName(updateEventDTO.getName() != null ? updateEventDTO.getName() : eventEntity.getName());
 
+        UpdateElementDTO updateElementDTO = new UpdateElementDTO();
+
         if (updateEventDTO.getEndDate() != null) {
+
+            if (eventEntity.getEndDate() != updateEventDTO.getEndDate()) {
+                updateElementDTO.setDate(OffsetDateTime.from(updateEventDTO.getEndDate().atOffset(ZoneOffset.UTC)));
+                updateElementDTO.setElementId(eventId);
+                updateElementDTO.setType("USER_MARKER");
+            }
+
             eventEntity.setEndDate(updateEventDTO.getEndDate());
         }
 
         if (updateEventDTO.getStatusCode() != null) {
             StatusEntity statusEntity = statusRepository.findByCode(updateEventDTO.getStatusCode());
             if (statusEntity != null) {
+
+                if (!Objects.equals(eventEntity.getStatusCode(), statusEntity.getCode())) {
+                    updateElementDTO.setStatus(statusEntity.getCode());
+                    updateElementDTO.setElementId(eventId);
+                    updateElementDTO.setType("USER_MARKER");
+                }
+
                 eventEntity.setStatusCode(statusEntity.getCode());
             }
             else {
@@ -127,6 +151,10 @@ public class EventManagerServiceImpl implements EventManagerService {
         eventEntity.setOperator(updateEventDTO.getOperatorId() != null ? getUserById(updateEventDTO.getOperatorId(), token) : eventEntity.getOperator());
 
         logger.info("Мероприятие с айди {} обновлено в базе данных", eventId);
+
+        if (updateElementDTO.getType() != null) {
+            kafkaProducerService.sendUpdate(updateElementDTO);
+        }
         return eventRepository.save(eventEntity);
     }
 
