@@ -6,6 +6,7 @@ import com.example.event_manager.model.CreateEventDTO;
 import com.example.event_manager.model.CreateHistoryDTO;
 import com.example.event_manager.model.UpdateEventDTO;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 
 import java.time.Instant;
 import java.util.List;
@@ -23,7 +24,8 @@ public interface EventManagerService {
                                    Instant endFirstDate, Instant endSecondDate,
                                    Instant updateFirstDate, Instant updateSecondDate,
                                    String search, String operatorSearch,
-                                   String eventType, String problemAreaType);
+                                   String eventType, String problemAreaType,
+                                   String sortField, Sort.Direction sortDirection);
 
     Page<EventHistoryEntity> getEventHistory(UUID eventId, int page, int size);
 

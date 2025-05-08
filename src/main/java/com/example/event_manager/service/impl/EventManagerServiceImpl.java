@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import com.example.event_manager.entity.spec.EntitySpecifications;
@@ -27,6 +28,7 @@ import com.example.event_manager.entity.spec.EntitySpecifications;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -58,6 +60,8 @@ public class EventManagerServiceImpl implements EventManagerService {
 
     private static final Logger logger = LoggerFactory.getLogger(EventManagerController.class);
 
+    private final List<String> validSortFields = Arrays.asList("startDate", "endDate", "lastUpdateDate", "statusCode", "name", "operatorFullText", "eventType", "problemAreaType");
+
     @Override
     @Transactional
     public EventEntity createNewEvent(CreateEventDTO createEventDTO, String token) {
@@ -86,8 +90,14 @@ public class EventManagerServiceImpl implements EventManagerService {
                                           Instant endFirstDate, Instant endSecondDate,
                                           Instant updateFirstDate, Instant updateSecondDate,
                                           String search, String operatorSearch,
-                                          String eventType, String problemAreaType) {
-        Pageable pageable = PageRequest.of(page, size);
+                                          String eventType, String problemAreaType,
+                                          String sortField, Sort.Direction sortDirection) {
+
+        if (!validSortFields.contains(sortField)) {
+            sortField = "lastUpdateDate";
+        }
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sortField));
         Specification<EventEntity> spec = Specification.where(EntitySpecifications.hasStatusValue(status))
                 .and(EntitySpecifications.hasOperatorIdValue(operatorId))
                 .and(EntitySpecifications.hasStartDateBetween(startFirstDate, startSecondDate))
