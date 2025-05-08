@@ -249,6 +249,10 @@ public class EventManagerServiceImpl implements EventManagerService {
             eventHistoryEntity.setRecordDate(createHistoryDTO.getRecordDate());
         }
 
+        if (createHistoryDTO.getPhotos() != null & createHistoryDTO.getPhotos().size() > 10) {
+            throw new ImageLimitExceededException();
+        }
+
         eventHistoryEntity.setRecordType(createHistoryDTO.getRecordType());
         eventHistoryEntity.setDescription(createHistoryDTO.getDescription() != null ? createHistoryDTO.getDescription() : "");
         eventHistoryEntity.setPhotos(createHistoryDTO.getPhotos() != null ? createHistoryDTO.getPhotos() : List.of());
