@@ -21,7 +21,9 @@ public interface EventManagerService {
     Page<EventEntity> getAllEvents(int page, int size, String status, UUID operatorId,
                                    Instant startFirstDate, Instant startSecondDate,
                                    Instant endFirstDate, Instant endSecondDate,
-                                   Instant updateFirstDate, Instant updateSecondDate, String search, String operatorSearch);
+                                   Instant updateFirstDate, Instant updateSecondDate,
+                                   String search, String operatorSearch,
+                                   String eventType, String problemAreaType);
 
     Page<EventHistoryEntity> getEventHistory(UUID eventId, int page, int size);
 
