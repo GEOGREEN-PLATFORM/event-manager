@@ -77,4 +77,22 @@ public class EntitySpecifications {
             );
         };
     }
+
+    public static Specification<EventEntity> hasEventType(String fieldValue) {
+        return (root, query, criteriaBuilder) -> {
+            if (fieldValue == null || fieldValue.isEmpty()) {
+                return criteriaBuilder.conjunction();
+            }
+            return criteriaBuilder.equal(root.get("eventType"), fieldValue);
+        };
+    }
+
+    public static Specification<EventEntity> hasProblemAreaType(String fieldValue) {
+        return (root, query, criteriaBuilder) -> {
+            if (fieldValue == null || fieldValue.isEmpty()) {
+                return criteriaBuilder.conjunction();
+            }
+            return criteriaBuilder.equal(root.get("problemAreaType"), fieldValue);
+        };
+    }
 }
