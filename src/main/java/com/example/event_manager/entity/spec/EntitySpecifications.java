@@ -95,4 +95,13 @@ public class EntitySpecifications {
             return criteriaBuilder.equal(root.get("problemAreaType"), fieldValue);
         };
     }
+
+    public static Specification<EventEntity> hasGeoPointId(UUID fieldValue) {
+        return (root, query, criteriaBuilder) -> {
+            if (fieldValue == null) {
+                return criteriaBuilder.conjunction();
+            }
+            return criteriaBuilder.equal(root.get("geoPointId"), fieldValue);
+        };
+    }
 }

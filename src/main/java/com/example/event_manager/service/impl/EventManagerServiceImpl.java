@@ -90,7 +90,7 @@ public class EventManagerServiceImpl implements EventManagerService {
                                           Instant endFirstDate, Instant endSecondDate,
                                           Instant updateFirstDate, Instant updateSecondDate,
                                           String search, String operatorSearch,
-                                          String eventType, String problemAreaType,
+                                          String eventType, String problemAreaType, UUID geoPointId,
                                           String sortField, Sort.Direction sortDirection) {
 
         if (!validSortFields.contains(sortField)) {
@@ -106,7 +106,8 @@ public class EventManagerServiceImpl implements EventManagerService {
                 .and(EntitySpecifications.nameContains(search))
                 .and(EntitySpecifications.operaotrNameContains(operatorSearch))
                 .and(EntitySpecifications.hasEventType(eventType))
-                .and(EntitySpecifications.hasProblemAreaType(problemAreaType));
+                .and(EntitySpecifications.hasProblemAreaType(problemAreaType))
+                .and(EntitySpecifications.hasGeoPointId(geoPointId));
         return eventRepository.findAll(spec, pageable);
     }
 

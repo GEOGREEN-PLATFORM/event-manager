@@ -24,7 +24,7 @@ public interface EventManagerService {
                                    Instant endFirstDate, Instant endSecondDate,
                                    Instant updateFirstDate, Instant updateSecondDate,
                                    String search, String operatorSearch,
-                                   String eventType, String problemAreaType,
+                                   String eventType, String problemAreaType, UUID geoPointId,
                                    String sortField, Sort.Direction sortDirection);
 
     Page<EventHistoryEntity> getEventHistory(UUID eventId, int page, int size);

@@ -91,11 +91,12 @@ public class EventManagerController {
             @RequestParam(required = false) String operatorSearch,
             @RequestParam(required = false) String eventType,
             @RequestParam(required = false) String problemAreaType,
+            @RequestParam(required = false) UUID geoPointId,
             @RequestParam(defaultValue = "lastUpdateDate") String sortField,
             @RequestParam(defaultValue = "DESC") Sort.Direction sortDirection) {
         Page<EventEntity> result  = eventManagerService.getAllEvents(page, size, status, operatorId,
                 startFirstDate, startSecondDate, endFirstDate, endSecondDate, updateFirstDate, updateSecondDate,
-                search, operatorSearch, eventType, problemAreaType, sortField, sortDirection);
+                search, operatorSearch, eventType, problemAreaType, geoPointId, sortField, sortDirection);
         return new SimplifiedPageResponse<>(result);
     }
 
