@@ -134,28 +134,17 @@ public class EventManagerServiceImpl implements EventManagerService {
         eventEntity.setName(updateEventDTO.getName() != null ? updateEventDTO.getName() : eventEntity.getName());
 
         UpdateElementDTO updateElementDTO = new UpdateElementDTO();
+        int flag = 0;
 
         if (updateEventDTO.getEndDate() != null) {
-
-            if (eventEntity.getEndDate() != updateEventDTO.getEndDate()) {
-                updateElementDTO.setDate(OffsetDateTime.from(updateEventDTO.getEndDate().atOffset(ZoneOffset.UTC)));
-                updateElementDTO.setElementId(eventId);
-                updateElementDTO.setType("USER_MARKER");
-            }
-
+            flag = 1;
             eventEntity.setEndDate(updateEventDTO.getEndDate());
         }
 
         if (updateEventDTO.getStatusCode() != null) {
             StatusEntity statusEntity = statusRepository.findByCode(updateEventDTO.getStatusCode());
             if (statusEntity != null) {
-
-                if (!Objects.equals(eventEntity.getStatusCode(), statusEntity.getCode())) {
-                    updateElementDTO.setStatus(statusEntity.getCode());
-                    updateElementDTO.setElementId(eventId);
-                    updateElementDTO.setType("USER_MARKER");
-                }
-
+                flag = 1;
                 eventEntity.setStatusCode(statusEntity.getCode());
             }
             else {
@@ -167,7 +156,11 @@ public class EventManagerServiceImpl implements EventManagerService {
 
         logger.info("Мероприятие с айди {} обновлено в базе данных", eventId);
 
-        if (updateElementDTO.getType() != null) {
+        if (flag == 1) {
+            updateElementDTO.setType("Мероприятие");
+            updateElementDTO.setElementId(eventId);
+            updateElementDTO.setStatus(eventEntity.getStatusCode());
+            updateElementDTO.setDate(OffsetDateTime.from(eventEntity.getEndDate().atOffset(ZoneOffset.UTC)));
             kafkaProducerService.sendUpdate(updateElementDTO);
         }
         return eventRepository.save(eventEntity);
