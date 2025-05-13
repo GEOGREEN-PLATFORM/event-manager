@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -87,9 +88,15 @@ public class EventManagerController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Instant updateFirstDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Instant updateSecondDate,
             @RequestParam(required = false) String search,
-            @RequestParam(required = false) String operatorSearch) {
+            @RequestParam(required = false) String operatorSearch,
+            @RequestParam(required = false) String eventType,
+            @RequestParam(required = false) String problemAreaType,
+            @RequestParam(required = false) UUID geoPointId,
+            @RequestParam(defaultValue = "lastUpdateDate") String sortField,
+            @RequestParam(defaultValue = "DESC") Sort.Direction sortDirection) {
         Page<EventEntity> result  = eventManagerService.getAllEvents(page, size, status, operatorId,
-                startFirstDate, startSecondDate, endFirstDate, endSecondDate, updateFirstDate, updateSecondDate, search, operatorSearch);
+                startFirstDate, startSecondDate, endFirstDate, endSecondDate, updateFirstDate, updateSecondDate,
+                search, operatorSearch, eventType, problemAreaType, geoPointId, sortField, sortDirection);
         return new SimplifiedPageResponse<>(result);
     }
 
