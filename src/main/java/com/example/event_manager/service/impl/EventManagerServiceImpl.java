@@ -2,12 +2,15 @@ package com.example.event_manager.service.impl;
 
 import com.example.event_manager.controller.EventManagerController;
 import com.example.event_manager.entity.*;
+import com.example.event_manager.entity.spec.EntitySpecifications;
 import com.example.event_manager.exception.custom.*;
+import com.example.event_manager.feignClient.FeignClientGeoMarkerService;
 import com.example.event_manager.feignClient.FeignClientUserService;
 import com.example.event_manager.model.CreateEventDTO;
 import com.example.event_manager.model.CreateHistoryDTO;
 import com.example.event_manager.model.UpdateEventDTO;
 import com.example.event_manager.model.UserDTO;
+import com.example.event_manager.model.geoMarker.GeoMarkerDTO;
 import com.example.event_manager.producer.KafkaProducerService;
 import com.example.event_manager.producer.dto.UpdateElementDTO;
 import com.example.event_manager.repository.*;
@@ -23,14 +26,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import com.example.event_manager.entity.spec.EntitySpecifications;
 
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -56,6 +57,9 @@ public class EventManagerServiceImpl implements EventManagerService {
     private final FeignClientUserService feignClientUserService;
 
     @Autowired
+    private final FeignClientGeoMarkerService feignClientGeoMarkerService;
+
+    @Autowired
     private KafkaProducerService kafkaProducerService;
 
     private static final Logger logger = LoggerFactory.getLogger(EventManagerController.class);
@@ -65,7 +69,16 @@ public class EventManagerServiceImpl implements EventManagerService {
     @Override
     @Transactional
     public EventEntity createNewEvent(CreateEventDTO createEventDTO, String token) {
-        return eventRepository.save(eventDtoToEntity(createEventDTO, token));
+        EventEntity result = eventRepository.save(eventDtoToEntity(createEventDTO, token));
+
+        GeoMarkerDTO geoPoint = feignClientGeoMarkerService.getGeoPointById(token, result.getGeoPointId());
+        List<UUID> events = geoPoint.getRelatedTaskIds();
+        events.add(result.getId());
+        logger.info(result.getId().toString());
+        geoPoint.setRelatedTaskIds(events);
+        feignClientGeoMarkerService.updateGeoPoint(token, result.getGeoPointId(), geoPoint);
+
+        return result;
     }
 
     @Override
