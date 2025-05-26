@@ -20,10 +20,10 @@ import java.util.Optional;
 public class StatusServiceImpl implements StatusService {
 
     @Autowired
-    private StatusRepository statusRepository;
+    private final StatusRepository statusRepository;
 
     @Autowired
-    private EventRepository eventRepository;
+    private final EventRepository eventRepository;
 
     @Override
     @Transactional

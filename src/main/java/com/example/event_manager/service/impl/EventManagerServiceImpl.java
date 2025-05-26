@@ -39,19 +39,19 @@ import java.util.UUID;
 public class EventManagerServiceImpl implements EventManagerService {
 
     @Autowired
-    private EventRepository eventRepository;
+    private final EventRepository eventRepository;
 
     @Autowired
-    private EventHistoryRepository eventHistoryRepository;
+    private final EventHistoryRepository eventHistoryRepository;
 
     @Autowired
-    private StatusRepository statusRepository;
+    private final StatusRepository statusRepository;
 
     @Autowired
-    private ProblemTypeRepository problemTypeRepository;
+    private final ProblemTypeRepository problemTypeRepository;
 
     @Autowired
-    private EventTypeRepository eventTypeRepository;
+    private final EventTypeRepository eventTypeRepository;
 
     @Autowired
     private final FeignClientUserService feignClientUserService;
@@ -60,7 +60,7 @@ public class EventManagerServiceImpl implements EventManagerService {
     private final FeignClientGeoMarkerService feignClientGeoMarkerService;
 
     @Autowired
-    private KafkaProducerService kafkaProducerService;
+    private final KafkaProducerService kafkaProducerService;
 
     private static final Logger logger = LoggerFactory.getLogger(EventManagerController.class);
 
@@ -266,7 +266,8 @@ public class EventManagerServiceImpl implements EventManagerService {
             eventHistoryEntity.setRecordDate(createHistoryDTO.getRecordDate());
         }
 
-        if (createHistoryDTO.getPhotos() != null & createHistoryDTO.getPhotos().size() > 10) {
+        if (createHistoryDTO.getPhotos() != null)
+            if (createHistoryDTO.getPhotos().size() > 10) {
             throw new ImageLimitExceededException();
         }
 
