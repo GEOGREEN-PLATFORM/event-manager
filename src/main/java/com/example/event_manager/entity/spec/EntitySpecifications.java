@@ -5,6 +5,7 @@ import io.micrometer.common.util.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 public class EntitySpecifications {
@@ -31,7 +32,13 @@ public class EntitySpecifications {
             if (startDate == null || endDate == null) {
                 return criteriaBuilder.conjunction();
             }
-            return criteriaBuilder.between(root.get("startDate"), startDate, endDate);
+
+            Instant adjustedEndDate = endDate;
+            if (startDate.equals(adjustedEndDate)) {
+                adjustedEndDate = adjustedEndDate.plus(24, ChronoUnit.HOURS);
+            }
+
+            return criteriaBuilder.between(root.get("startDate"), startDate, adjustedEndDate);
         };
     }
 
@@ -40,7 +47,13 @@ public class EntitySpecifications {
             if (startDate == null || endDate == null) {
                 return criteriaBuilder.conjunction();
             }
-            return criteriaBuilder.between(root.get("endDate"), startDate, endDate);
+
+            Instant adjustedEndDate = endDate;
+            if (startDate.equals(adjustedEndDate)) {
+                adjustedEndDate = adjustedEndDate.plus(24, ChronoUnit.HOURS);
+            }
+
+            return criteriaBuilder.between(root.get("endDate"), startDate, adjustedEndDate);
         };
     }
 
@@ -49,7 +62,13 @@ public class EntitySpecifications {
             if (startDate == null || endDate == null) {
                 return criteriaBuilder.conjunction();
             }
-            return criteriaBuilder.between(root.get("lastUpdateDate"), startDate, endDate);
+
+            Instant adjustedEndDate = endDate;
+            if (startDate.equals(adjustedEndDate)) {
+                adjustedEndDate = adjustedEndDate.plus(24, ChronoUnit.HOURS);
+            }
+
+            return criteriaBuilder.between(root.get("lastUpdateDate"), startDate, adjustedEndDate);
         };
     }
 
