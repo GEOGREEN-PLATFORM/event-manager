@@ -57,7 +57,7 @@ class EventManagerServiceImplTest {
     }
 
     @Test
-    void createNewEvent_shouldSaveAndUpdateGeoMarker() {
+    void createNewEvent_shouldSaveAndPostRelatedTask() {
         CreateEventDTO dto = new CreateEventDTO();
         dto.setGeoPointId(UUID.randomUUID());
         dto.setName("Event Name");
@@ -85,15 +85,12 @@ class EventManagerServiceImplTest {
         when(feignClientUserService.getUserById(any(), any())).thenReturn(new UserDTO());
         when(eventRepository.save(any())).thenReturn(savedEntity);
 
-        GeoMarkerDTO geoMarkerDTO = new GeoMarkerDTO();
-        geoMarkerDTO.setRelatedTaskIds(new ArrayList<>());
-        when(feignClientGeoMarkerService.getGeoPointById(any(), any())).thenReturn(geoMarkerDTO);
-
         EventEntity result = service.createNewEvent(dto, "token");
 
         assertThat(result).isNotNull();
         verify(eventRepository).save(any());
-        verify(feignClientGeoMarkerService).updateGeoPoint(any(), any(), any());
+        verify(feignClientGeoMarkerService).postRelatedTask(eq("token"), eq(dto.getGeoPointId()),
+                argThat(task -> task.getRelatedTaskId().equals(savedEntity.getId())));
     }
 
     @Test

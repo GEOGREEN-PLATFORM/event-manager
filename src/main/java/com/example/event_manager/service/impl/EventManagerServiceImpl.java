@@ -11,6 +11,7 @@ import com.example.event_manager.model.CreateHistoryDTO;
 import com.example.event_manager.model.UpdateEventDTO;
 import com.example.event_manager.model.UserDTO;
 import com.example.event_manager.model.geoMarker.GeoMarkerDTO;
+import com.example.event_manager.model.geoMarker.RelatedTaskDTO;
 import com.example.event_manager.producer.KafkaProducerService;
 import com.example.event_manager.producer.dto.UpdateElementDTO;
 import com.example.event_manager.repository.*;
@@ -71,13 +72,7 @@ public class EventManagerServiceImpl implements EventManagerService {
     public EventEntity createNewEvent(CreateEventDTO createEventDTO, String token) {
         EventEntity result = eventRepository.save(eventDtoToEntity(createEventDTO, token));
 
-        GeoMarkerDTO geoPoint = feignClientGeoMarkerService.getGeoPointById(token, result.getGeoPointId());
-        List<UUID> events = geoPoint.getRelatedTaskIds();
-        events.add(result.getId());
-        logger.info(result.getId().toString());
-        geoPoint.setRelatedTaskIds(events);
-        feignClientGeoMarkerService.updateGeoPoint(token, result.getGeoPointId(), geoPoint);
-
+        feignClientGeoMarkerService.postRelatedTask(token, result.getGeoPointId(), new RelatedTaskDTO(result.getId()));
         return result;
     }
 
