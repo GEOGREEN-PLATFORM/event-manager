@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet logicalFilePath="modify-table-status"
+               id="modify-table-status" author="Egor">
+
+        <createTable tableName="status">
+            <column name="id" type="SERIAL">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+
+            <column name="code" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="description" type="VARCHAR(255)"/>
+
+            <column name="is_default" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+    </changeSet>
+
+    <changeSet logicalFilePath="clear-table-status" id="clear-table-status" author="Egor">
+        <sql>TRUNCATE TABLE status RESTART IDENTITY CASCADE;</sql>
+    </changeSet>
+
+    <changeSet id="add-default-statuses" author="Egor">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                SELECT COUNT(*) FROM status WHERE is_default = true
+            </sqlCheck>
+        </preConditions>
+
+        <insert tableName="status">
+            <column name="code" value="СОЗДАНО"/>
+            <column name="description" value="Мероприятие создано администратором."/>
+            <column name="is_default" valueBoolean="true"/>
+        </insert>
+
+        <insert tableName="status">
+            <column name="code" value="В РАБОТЕ"/>
+            <column name="description" value="Статус мероприятия вручную выставлен оператором или администратором. Работы по мероприятию начаты."/>
+            <column name="is_default" valueBoolean="false"/>
+        </insert>
+
+        <insert tableName="status">
+            <column name="code" value="НА ПРОВЕРКЕ"/>
+            <column name="description" value="Статус мероприятия вручную выставлен оператором или администратором. Результаты по проведенным работам на проверке."/>
+            <column name="is_default" valueBoolean="false"/>
+        </insert>
+
+        <insert tableName="status">
+            <column name="code" value="НА ПАУЗЕ"/>
+            <column name="description" value="Статус мероприятия вручную выставлен оператором или администратором. Работы приостановлены."/>
+            <column name="is_default" valueBoolean="false"/>
+        </insert>
+
+        <insert tableName="status">
+            <column name="code" value="ОТКЛОНЕНО"/>
+            <column name="description" value="Статус мероприятия вручную выставлен оператором или администратором. Мероприятие отклонено, дальнейшие работы проводиться не будут."/>
+            <column name="is_default" valueBoolean="false"/>
+        </insert>
+
+        <insert tableName="status">
+            <column name="code" value="ВЫПОЛНЕНО"/>
+            <column name="description" value="Статус мероприятия вручную выставлен администратором. Результаты приняты. Работы завершены."/>
+            <column name="is_default" valueBoolean="false"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
