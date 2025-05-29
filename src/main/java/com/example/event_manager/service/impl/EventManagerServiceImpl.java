@@ -2,12 +2,16 @@ package com.example.event_manager.service.impl;
 
 import com.example.event_manager.controller.EventManagerController;
 import com.example.event_manager.entity.*;
+import com.example.event_manager.entity.spec.EntitySpecifications;
 import com.example.event_manager.exception.custom.*;
+import com.example.event_manager.feignClient.FeignClientGeoMarkerService;
 import com.example.event_manager.feignClient.FeignClientUserService;
 import com.example.event_manager.model.CreateEventDTO;
 import com.example.event_manager.model.CreateHistoryDTO;
 import com.example.event_manager.model.UpdateEventDTO;
 import com.example.event_manager.model.UserDTO;
+import com.example.event_manager.model.geoMarker.GeoMarkerDTO;
+import com.example.event_manager.model.geoMarker.RelatedTaskDTO;
 import com.example.event_manager.producer.KafkaProducerService;
 import com.example.event_manager.producer.dto.UpdateElementDTO;
 import com.example.event_manager.repository.*;
@@ -23,14 +27,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import com.example.event_manager.entity.spec.EntitySpecifications;
 
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -38,25 +40,28 @@ import java.util.UUID;
 public class EventManagerServiceImpl implements EventManagerService {
 
     @Autowired
-    private EventRepository eventRepository;
+    private final EventRepository eventRepository;
 
     @Autowired
-    private EventHistoryRepository eventHistoryRepository;
+    private final EventHistoryRepository eventHistoryRepository;
 
     @Autowired
-    private StatusRepository statusRepository;
+    private final StatusRepository statusRepository;
 
     @Autowired
-    private ProblemTypeRepository problemTypeRepository;
+    private final ProblemTypeRepository problemTypeRepository;
 
     @Autowired
-    private EventTypeRepository eventTypeRepository;
+    private final EventTypeRepository eventTypeRepository;
 
     @Autowired
     private final FeignClientUserService feignClientUserService;
 
     @Autowired
-    private KafkaProducerService kafkaProducerService;
+    private final FeignClientGeoMarkerService feignClientGeoMarkerService;
+
+    @Autowired
+    private final KafkaProducerService kafkaProducerService;
 
     private static final Logger logger = LoggerFactory.getLogger(EventManagerController.class);
 
@@ -65,7 +70,10 @@ public class EventManagerServiceImpl implements EventManagerService {
     @Override
     @Transactional
     public EventEntity createNewEvent(CreateEventDTO createEventDTO, String token) {
-        return eventRepository.save(eventDtoToEntity(createEventDTO, token));
+        EventEntity result = eventRepository.save(eventDtoToEntity(createEventDTO, token));
+
+        feignClientGeoMarkerService.postRelatedTask(token, result.getGeoPointId(), new RelatedTaskDTO(result.getId()));
+        return result;
     }
 
     @Override
@@ -253,7 +261,8 @@ public class EventManagerServiceImpl implements EventManagerService {
             eventHistoryEntity.setRecordDate(createHistoryDTO.getRecordDate());
         }
 
-        if (createHistoryDTO.getPhotos() != null & createHistoryDTO.getPhotos().size() > 10) {
+        if (createHistoryDTO.getPhotos() != null)
+            if (createHistoryDTO.getPhotos().size() > 10) {
             throw new ImageLimitExceededException();
         }
 
